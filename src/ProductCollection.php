@@ -3,7 +3,7 @@ require_once 'Product.php';
 
 class ProductCollection
 {
-    public function __construct(array $data)
+    public function __construct($data)
     {
         $this->_data = $data;
     }
@@ -32,7 +32,7 @@ class ProductCollection
         $this->_offset = $value;
     }
 
-    private $_data;
+    private $_data = array();
     private $_limit;
     private $_offset;
 }
