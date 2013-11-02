@@ -6,20 +6,18 @@ class ProductCollection
     public function __construct(array $data)
     {
         $this->_data = $data;
+        $this->_limit = count($this->_data);
+        $this->_offset = 0;
     }
 
     public function getProducts()
     {
-        if(isset($this->_offset)){
-            $offset_products = array_slice($this->_data,$this->_offset);
-            return $offset_products;
-        }
-        return $this->_data;
+            return array_slice($this->_data,$this->_offset,$this->_limit);
     }
 
     public function getSize()
     {
-        return isset($this->_limit) ? $this->_limit : count($this->_data);
+        return count($this->getProducts());
     }
 
     public function limit($value)
