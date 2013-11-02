@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 v sku
 v name
 v image
@@ -7,3 +8,12 @@ v stroked price if special price exists
 
 v list products
 v paging (limit, set offset)
+=======
+list products ad for each show:
+sku
+name
+image
+price (stroked if special price exists)
+special price
+paging
+>>>>>>> Stashed changes
