@@ -1,36 +1,11 @@
 <?php
 require_once 'Product.php';
+require_once 'Collection.php';
 
-class ProductCollection
+class ProductCollection extends Collection
 {
-    public function __construct($data)
-    {
-        $this->_data = $data;
-        $this->_limit = count($this->_data);
-        $this->_offset = 0;
-    }
-
     public function getProducts()
     {
-            return array_slice($this->_data,$this->_offset,$this->_limit);
+        return $this->getCollection();
     }
-
-    public function getSize()
-    {
-        return count($this->getProducts());
-    }
-
-    public function limit($value)
-    {
-        $this->_limit = $value;
-    }
-
-    public function offset($value)
-    {
-        $this->_offset = $value;
-    }
-
-    private $_data = array();
-    private $_limit;
-    private $_offset;
 }
