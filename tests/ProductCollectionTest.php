@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../src/ProductCollection.php';
+require_once __DIR__ . '/../src/models/ProductCollection.php';
 
 class ProductCollectionTest extends PHPUnit_Framework_TestCase
 {
@@ -72,5 +72,35 @@ class ProductCollectionTest extends PHPUnit_Framework_TestCase
 
         $products->offset(4);
         $this->assertEquals(0,$products->getSize());
+    }
+
+    public function testAppliesSortingToCollectionProducts()
+    {
+        $products = new ProductCollection([new Product(['sku'=>'foo']),new Product(['sku'=>'bar']),new Product(['sku'=>'baz'])]);
+        $products->sort('sku');
+
+        $this->assertEquals([new Product(['sku'=>'bar']),new Product(['sku'=>'baz']),new Product(['sku'=>'foo'])],$products->getProducts());
+
+        $products = new ProductCollection([new Product(['sku'=>'baz']),new Product(['sku'=>'foo']),new Product(['sku'=>'bar'])]);
+        $products->sort('sku');
+
+        $this->assertEquals([new Product(['sku'=>'bar']),new Product(['sku'=>'baz']),new Product(['sku'=>'foo'])],$products->getProducts());
+    }
+
+    public function testIsIterableWithForeachFunction()
+    {
+        $collection = new ProductCollection(
+            [new Product(['name' => 'foo']), new Product(['name' => 'bar'])]
+        );
+        $expected = array(0 => 'foo', 1 => 'bar');
+        $iterated = false;
+        foreach ($collection as $_key => $_product) {
+            $this->assertEquals($expected[$_key], $_product->getName());
+            $iterated = true;
+        }
+
+        if (!$iterated) {
+            $this->fail('Iteration did not happen');
+        }
     }
 }

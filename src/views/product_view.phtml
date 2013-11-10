@@ -1,0 +1,22 @@
+<?php require_once 'html_header'; ?>
+<div class="list">
+    <h1>Product <?php $product->getName(); ?></h1>
+    <div class="item">
+        <img src="<?php echo $product->getImage(); ?>" class="image">
+        <h2><?php echo $product->getName(); ?></h2>
+        <span><p><?php echo "Sku: " . $product->getSku();?></span>
+        <span><p><?php echo "Price: " . $product->getPrice(); ?></span>
+        <span><p><?php echo "Special price: " . $product->getSpecialPrice(); ?></span>
+        <h2><?php echo "Average rating: " . $reviews->getAverageRating(); ?></h2>
+    </div>
+    <h1>Reviews:</h1>
+        <?php foreach ($_reviews as $_review): ?>
+        <div class="item">
+                <h2><?php echo $_review->getName(); ?></h2>
+                <span><p><?php echo "E-mail: " . $_review->getEmail();?></span>
+                <span><p><?php echo "Text: " . $_review->getText(); ?></span>
+                <span><p><?php echo "Rating: " . $_review->getRating(); ?></span>
+        </div>
+        <?php endforeach; ?>
+</div>
+<?php require_once 'html_footer'; ?>

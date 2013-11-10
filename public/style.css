@@ -1,0 +1,67 @@
+H1
+{
+    font-size: 250%;
+    color: #802420;
+}
+
+h2
+{
+    text-align: right;
+}
+
+p
+{
+    text-align: right;
+}
+div
+{
+    box-shadow:0 10px 7px rgba(0, 0, 0, 0.7);
+}
+
+.list
+{
+    margin:0 auto;
+    width: 800px;
+    background: #9eb3f4;
+    padding: 10px;
+}
+
+.item
+{
+    background: #dff0d8;
+    margin: 1% auto;
+    width: 720px;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.image
+{
+    float: left;
+    margin: 10px 10px 10px 0;
+    max-height: 160px;
+    box-shadow:0 2px 1px rgba(0, 0, 0, 0.7);
+}
+
+body
+{
+    background: url(http://wp-b.com/images/2011/6/24/4chan1308976362716.jpg);
+    background-size: 100%;
+}
+
+#header
+{
+    font-size: 2.2em;
+    text-align: center;
+    padding: 5px;
+    background: #8fa09b;
+    color: #ffe;
+}
+
+#footer
+{
+    background: #8fa09b;
+    color: #fff;
+    padding: 5px;
+    clear: left;
+}
