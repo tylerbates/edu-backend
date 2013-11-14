@@ -9,9 +9,15 @@ class RouterTest extends PHPUnit_Framework_TestCase
 {
     public function testRouterParsesEmptyGetRequest()
     {
-        $router = new Router(null);
-        $this->assertEquals('ProductController', $router->getController());
-        $this->assertEquals('listAction', $router->getAction());
+        try
+        {
+            $router = new Router(null);
+        }
+        catch (DefaultPageException $e)
+        {
+            return;
+        }
+        $this->fail('Exception was not caught');
     }
 
     public function testRouterParsesProductListRequest()
@@ -45,19 +51,37 @@ class RouterTest extends PHPUnit_Framework_TestCase
 
     public function testRouterParsesRequestWithoutSplit()
     {
-        $router = new Router('productview');
-        $this->assertEquals('NotFoundController', $router->getController());
-        $this->assertEquals('notFoundAction', $router->getAction());
+        try
+        {
+            $router = new Router('productview');
+        }
+        catch (NotFoundException $e)
+        {
+            return;
+        }
+        $this->fail('Exception was not caught');
     }
 
     public function testRouterParsesWrongClassOrMethodRequest()
     {
-        $router = new Router('view_product');
-        $this->assertEquals('NotFoundController', $router->getController());
-        $this->assertEquals('notFoundAction', $router->getAction());
+        try
+        {
+            $router = new Router('view_product');
+        }
+        catch (NotFoundException $e)
+        {
+            return;
+        }
+        $this->fail('Exception was not caught');
 
-        $router = new Router('sdgasdh_gfjfdgj');
-        $this->assertEquals('NotFoundController', $router->getController());
-        $this->assertEquals('notFoundAction', $router->getAction());
+        try
+        {
+            $router = new Router('sdgasdh_gfjfdgj');
+        }
+        catch (NotFoundException $e)
+        {
+            return;
+        }
+        $this->fail('Exception was not caught');
     }
 }

@@ -1,48 +1,54 @@
 <?php
+class NotFoundException extends Exception{}
+class DefaultPageException extends Exception{}
+
 class Router
 {
     private $_controller;
     private $_action;
-    private $route_valid;
 
     public function __construct($route)
     {
-        if(!$route)
-        {
-            $this->_controller = 'product';
-            $this->_action = 'list';
-        }
-        else list($this->_controller, $this->_action) = explode('_', $route);
-        $this->_controller = ucfirst(strtolower($this->_controller)) . 'Controller';
-        $this->_action = strtolower($this->_action) . 'Action';
-        $this->route_valid = $this->_validateRoute();
+        $this->_validateRoute($route);
     }
 
     public function getController()
     {
-        if($this->route_valid) return $this->_controller;
-        return 'NotFoundController';
+        return $this->_controller;
     }
 
     public function getAction()
     {
-       if($this->route_valid) return $this->_action;
-        return 'notFoundAction';
+        return $this->_action;
     }
 
-    private function _validateRoute()
+    private function _validateRoute($route)
     {
-        if(!$this->_action)
+        if(!$route)
         {
-            return false;
+            throw new DefaultPageException();
+        }
+
+        if(!strpos($route,'_') || count(explode('_', $route))>2)
+        {
+            throw new NotFoundException();
+        }
+
+        list($this->_controller, $this->_action) = explode('_', $route);
+        $this->_controller = ucfirst(strtolower($this->_controller)) . 'Controller';
+        $this->_action = strtolower($this->_action) . 'Action';
+
+        if(!file_exists(__DIR__ . '/../controllers/' . $this->_controller . '.php'))
+        {
+            throw new NotFoundException();
         }
 
         include_once __DIR__ . '/../controllers/' . $this->_controller . '.php';
 
         if(!class_exists($this->_controller) || !method_exists($this->_controller, $this->_action))
         {
-            return false;
+            throw new NotFoundException();
         }
-        else return true;
+
     }
 }
