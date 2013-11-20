@@ -9,15 +9,8 @@ class RouterTest extends PHPUnit_Framework_TestCase
 {
     public function testRouterParsesEmptyGetRequest()
     {
-        try
-        {
-            $router = new Router(null);
-        }
-        catch (DefaultPageException $e)
-        {
-            return;
-        }
-        $this->fail('Exception was not caught');
+        $this->setExpectedException('DefaultPageException');
+        $router = new Router(null);
     }
 
     public function testRouterParsesProductListRequest()
@@ -51,37 +44,14 @@ class RouterTest extends PHPUnit_Framework_TestCase
 
     public function testRouterParsesRequestWithoutSplit()
     {
-        try
-        {
-            $router = new Router('productview');
-        }
-        catch (NotFoundException $e)
-        {
-            return;
-        }
-        $this->fail('Exception was not caught');
+        $this->setExpectedException('NotFoundException');
+        $router = new Router('productview');
     }
 
     public function testRouterParsesWrongClassOrMethodRequest()
     {
-        try
-        {
-            $router = new Router('view_product');
-        }
-        catch (NotFoundException $e)
-        {
-            return;
-        }
-        $this->fail('Exception was not caught');
-
-        try
-        {
-            $router = new Router('sdgasdh_gfjfdgj');
-        }
-        catch (NotFoundException $e)
-        {
-            return;
-        }
-        $this->fail('Exception was not caught');
+        $this->setExpectedException('NotFoundException');
+        $router = new Router('view_product');
+        $router = new Router('sdgasdh_gfjfdgj');
     }
 }
