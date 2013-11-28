@@ -72,3 +72,29 @@ insert into products (name,sku) values ('nokla 5210','nkl_5210'),('motorobla raz
 insert into orders (created_at,amount,customer_id,seller_id) values (now(),2456.99,1,4),(now(),5968.99,2,2),(now(),4587.99,3,2),(now(),1452.99,2,3),(now(),9856.99,8,4),(now(),100.99,6,1);
 
 insert into order_products (product_id,order_id) values (1,1),(1,2),(2,5),(3,6),(3,3),(1,3),(2,3),(2,4),(3,4);
+
+ALTER TABLE products ADD COLUMN image VARCHAR(255) COLLATE utf8_bin NULL;
+
+ALTER TABLE products ADD COLUMN price DECIMAL(10,2) NULL;
+
+ALTER TABLE products ADD COLUMN special_price DECIMAL(10,2) NULL;
+
+update products set image='http://www.ferra.ru/images/320/320657.jpg', price=1000, special_price=999.99 where product_id = 1;
+update products set image='http://paulov.ru/files/2011/02/motorola_L7.jpg', price=2000, special_price=1999.99 where product_id = 2;
+update products set image='http://img81.imageshack.us/img81/5471/img1135jpg.jpg', price=10000, special_price=9999.99 where product_id = 3;
+
+
+CREATE TABLE reviews (
+  review_id  INT(11) UNSIGNED  NOT NULL  AUTO_INCREMENT,
+  name VARCHAR(255) COLLATE utf8_bin NULL,
+  email VARCHAR(255) COLLATE utf8_bin NULL,
+  text TEXT COLLATE utf8_bin NULL,
+  rating INT(2) UNSIGNED NULL,
+  product_id INT(11) UNSIGNED NOT NULL,
+
+  CONSTRAINT FOREIGN KEY (product_id) REFERENCES products(product_id) ON UPDATE CASCADE ON DELETE CASCADE,
+  PRIMARY KEY (review_id)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8  AUTO_INCREMENT=1;
+
+insert into reviews (name, email,text,rating,product_id) values ('asfa','sadgsadg','sdasdgsadasd',2,1),('asfa','sadgsadg','sdasdgsadasd',2,2),('asfa','sadgsadg','sdasdgsadasd',2,3);
+insert into reviews (name, email,text,rating,product_id) values ('asfa','sadgsadg','sdasdgsadasd',3,1);

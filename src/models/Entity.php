@@ -2,7 +2,7 @@
 
 class Entity
 {
-    private $_data = array();
+    protected  $_data = array();
 
     public function __construct(array $data)
     {
@@ -17,5 +17,10 @@ class Entity
     public function getData($key)
     {
         return $this->_getData($key);
+    }
+
+    public function load(IResourceEntity $resource, $id)
+    {
+        $this->_data = $resource->find($id);
     }
 }

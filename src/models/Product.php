@@ -3,6 +3,11 @@ require_once __DIR__ . '/Entity.php';
 
 class Product extends Entity
 {
+    public function getId()
+    {
+        return $this->_getData('product_id');
+    }
+
     public function getSku()
     {
         return $this->_getData('sku');

@@ -2,96 +2,44 @@
 require_once __DIR__ . '/../models/ProductCollection.php';
 require_once __DIR__ . '/../models/Product.php';
 require_once __DIR__ . '/../models/ProductReviewCollection.php';
+require_once __DIR__ . '/../models/ProductReview.php';
+require_once __DIR__ . '/../models/Resource/DBCollection.php';
+require_once __DIR__ . '/../models/Resource/DBEntity.php';
+require_once __DIR__ . '/../models/Resource/DBconfig.php';
 
 class ProductController
 {
+    private $_connection;
+
+    function __construct()
+    {
+        $this->_connection = DBConfig::connect();
+    }
+
+    function __destruct()
+    {
+        unset($this->_connection);
+    }
+
     public function listAction()
     {
-        $products = new ProductCollection([
-            new Product([
-                'image'         => 'http://active-buy.com/foto/thumb-kopiya-nokia-6900-tv-2sim-fm-12-1mpx-kamera-mobilnye-telefony-597.jpg',
-                'name'          => 'Nokla',
-                'sku'           => '1233212312312312',
-                'price'         => 100,
-                'special_price' => 99.99,
-            ]),
-            new Product([
-                'image'         => 'http://active-buy.com/foto/thumb-kopiya-nokia-6900-tv-2sim-fm-12-1mpx-kamera-mobilnye-telefony-597.jpg',
-                'name'          => 'Nokla',
-                'sku'           => '1233212312312312',
-                'price'         => 100,
-                'special_price' => 99.99,
-            ]),
-            new Product([
-                'image'         => 'http://active-buy.com/foto/thumb-kopiya-nokia-6900-tv-2sim-fm-12-1mpx-kamera-mobilnye-telefony-597.jpg',
-                'name'          => 'Nokla',
-                'sku'           => '1233212312312312',
-                'price'         => 100,
-                'special_price' => 99.99,
-            ]),
-            new Product([
-                'image'         => 'http://static.mobile-arsenal.com.ua/images/catalog/motorola/c650/motorola-c650_1-m.jpg',
-                'name'          => 'Motorolka',
-                'sku'           => '1233212312312312',
-                'price'         => 50,
-                'special_price' => 49.99,
-            ]),
-            new Product([
-                'image'         => 'http://static.mobile-arsenal.com.ua/images/catalog/motorola/c650/motorola-c650_1-m.jpg',
-                'name'          => 'Motorolka',
-                'sku'           => '1233212312312312',
-                'price'         => 50,
-                'special_price' => 49.99,
-            ])
-        ]);
-
+        $resource = new DBCollection($this->_connection,'products');
+        $_products = new ProductCollection($resource);
+        $products = $_products->getProducts();
         require_once __DIR__ . '/../views/product_list.phtml';
     }
 
     public function viewAction()
     {
-        $product = new Product([
-            'image'         => 'http://active-buy.com/foto/thumb-kopiya-nokia-6900-tv-2sim-fm-12-1mpx-kamera-mobilnye-telefony-597.jpg',
-            'name'          => 'Nokla',
-            'sku'           => '1233212312312312',
-            'price'         => 100,
-            'special_price' => 99.99,
-        ]);
+        $product = new Product([]);
 
-        $reviews = new ProductReviewCollection([
-            new ProductReview([
-                'name'=>'Sasha',
-                'email'=>'Sasha@gmail.com',
-                'text'=>'safgcwrthwerxdwexhtctwrgwefcwehgwcerfhcwethfwerhderth rthwrthwr',
-                'rating'=>5,
-                'product'=>$product
-            ]),
-            new ProductReview([
-                'name'=>'Sasha',
-                'email'=>'Sasha@gmail.com',
-                'text'=>'safgcwrthwerxdwexhtctwrgwefcwehgwcerfhcwethfwerhderth rthwrthwr',
-                'rating'=>4,
-                'product'=>'asfsadgasdg'
-            ]),
-            new ProductReview([
-                'name'=>'Sasha',
-                'email'=>'Sasha@gmail.com',
-                'text'=>'safgcwrthwerxdwexhtctwrgwefcwehgwcerfhcwethfwerhderth rthwrthwr',
-                'rating'=>3,
-                'product'=>$product
-            ]),
-            new ProductReview([
-                'name'=>'Sasha',
-                'email'=>'Sasha@gmail.com',
-                'text'=>'safgcwrthwerxdwexhtctwrgwefcwehgwcerfhcwethfwerhderth rthwrthwr',
-                'rating'=>2,
-                'product'=>'asasfassg'
-            ])
+        $resource = new DBEntity($this->_connection,'products','product_id');
+        $product->load($resource,$_GET['id']);
 
+        $resource = new DBCollection($this->_connection,'reviews');
+        $reviews = new ProductReviewCollection($resource);
+        $_reviews = $reviews->filterByProduct($resource,'product_id',$_GET['id']);
 
-        ]);
-        $reviews->filterByProduct($product);
-        $_reviews = $reviews->getProductReviews();
         require_once __DIR__ . '/../views/product_view.phtml';
     }
 }

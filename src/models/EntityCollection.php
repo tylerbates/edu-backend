@@ -1,13 +1,20 @@
 <?php
 require_once 'Entity.php';
+require_once 'Resource/IResourceCollection.php';
 
 class Collection implements IteratorAggregate
 {
-    public function __construct($data)
+    public function __construct(IResourceCollection $resource)
     {
-        $this->_entities = $data;
+        $this->_resource = $resource;
+        $this->_setEntities();
         $this->_limit = count($this->_entities);
         $this->_offset = 0;
+    }
+
+    private function _setEntities()
+    {
+        return $this->_entities = $this->_resource->fetch();
     }
 
     protected function _getEntities()
@@ -57,4 +64,5 @@ class Collection implements IteratorAggregate
     private $_limit;
     private $_offset;
     private $_sortField;
+    private $_resource;
 }

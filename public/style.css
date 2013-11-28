@@ -13,6 +13,27 @@ p
 {
     text-align: right;
 }
+
+a
+{
+    text-decoration: none;
+}
+
+a:link
+{
+    color: #000000;
+}
+
+a:visited
+{
+    color: #000000;
+}
+
+a:hover
+{
+    color: #1b1b1b;
+}
+
 div
 {
     box-shadow:0 10px 7px rgba(0, 0, 0, 0.7);
