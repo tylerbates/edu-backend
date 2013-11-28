@@ -4,6 +4,8 @@ require_once 'EntityCollection.php';
 
 class ProductReviewCollection extends Collection
 {
+    private $_filteredReviews;
+
     public function getProductReviews()
     {
         return array_map(
@@ -16,13 +18,13 @@ class ProductReviewCollection extends Collection
     {
         $ratings = array_map(function (ProductReview $review){
                 return $review->getRating();
-            },$this->getProductReviews());
+            },$this->_filteredReviews);
         return array_sum($ratings)/count($ratings);
     }
 
     public function filterByProduct(IResourceCollection $resource, $column ,$id)
     {
-        return array_map(
+        return $this->_filteredReviews = array_map(
             function($data){
                 return new ProductReview($data);
             },$resource->filter($column,$id));
