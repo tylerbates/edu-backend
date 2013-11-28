@@ -21,8 +21,8 @@ class DBCollection implements IResourceCollection
     public function filter($column,$id)
     {
         echo var_dump($this->_table);
-        echo "SELECT * FROM {$this->_table} WHERE " . $this->_connection->quote($column) . "=" . $this->_connection->quote($id);
-        return $result = $this->_connection->query("SELECT * FROM {$this->_table} WHERE " . $this->_connection->quote($column) . "=" . $this->_connection->quote($id))
+        echo "SELECT * FROM {$this->_table} WHERE " . $column . "=" . $id;
+        return $result = $this->_connection->query("SELECT * FROM {$this->_table} WHERE " . $column . "=" . $id)
             ->fetchAll(PDO::FETCH_ASSOC);
         echo var_dump($result);
     }
