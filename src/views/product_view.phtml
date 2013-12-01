@@ -9,7 +9,7 @@
         <span><p><?php echo "Sku: " . $product->getSku();?></span>
         <span><p><?php echo "Price: " . $product->getPrice(); ?></span>
         <span><p><?php echo "Special price: " . $product->getSpecialPrice(); ?></span>
-        <h2><?php echo "Average rating: " . $reviews->getAverageRating(); ?></h2>
+        <h2><?php echo "Average rating: " . $average_rating; ?></h2>
     </div>
     <h1>Reviews:</h1>
         <?php foreach ($_reviews as $_review): ?>

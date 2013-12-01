@@ -4,29 +4,21 @@ require_once 'EntityCollection.php';
 
 class ProductReviewCollection extends Collection
 {
-    private $_filteredReviews;
-
     public function getProductReviews()
     {
         return array_map(
             function($data){
                 return new ProductReview($data);
-            },$this->_getEntities());
+            },$this->_resource->fetch());
+    }
+
+    public function filterByProduct(Product $product)
+    {
+        $this->_resource->filterBy('product_id', $product->getId());
     }
 
     public function getAverageRating()
     {
-        $ratings = array_map(function (ProductReview $review){
-                return $review->getRating();
-            },$this->_filteredReviews);
-        return array_sum($ratings)/count($ratings);
-    }
-
-    public function filterByProduct(IResourceCollection $resource, $column ,$id)
-    {
-        return $this->_filteredReviews = array_map(
-            function($data){
-                return new ProductReview($data);
-            },$resource->filter($column,$id));
+        return $this->_resource->average('rating');
     }
 }

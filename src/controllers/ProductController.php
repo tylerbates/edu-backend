@@ -38,7 +38,9 @@ class ProductController
 
         $resource = new DBCollection($this->_connection,'reviews');
         $reviews = new ProductReviewCollection($resource);
-        $_reviews = $reviews->filterByProduct($resource,'product_id',$_GET['id']);
+        $reviews->filterByProduct($product);
+        $_reviews = $reviews->getProductReviews();
+        $average_rating = $reviews->getAverageRating();
 
         require_once __DIR__ . '/../views/product_view.phtml';
     }

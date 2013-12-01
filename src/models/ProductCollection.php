@@ -10,6 +10,6 @@ class ProductCollection extends Collection
         return array_map(
             function($data){
                 return new Product($data);
-            },$this->_getEntities());
+            },$this->_resource->fetch());
     }
 }
