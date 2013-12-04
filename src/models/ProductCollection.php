@@ -1,9 +1,7 @@
 <?php
-require_once 'Product.php';
-require_once 'EntityCollection.php';
-require_once 'Resource/IResourceCollection.php';
+namespace App\Model;
 
-class ProductCollection extends Collection
+class ProductCollection extends EntityCollection
 {
     public function getProducts()
     {

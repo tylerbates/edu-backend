@@ -1,7 +1,9 @@
 <?php
-require_once __DIR__ . '/../src/models/Product.php';
+namespace Test\Model;
 
-class ProductTest extends PHPUnit_Framework_TestCase
+use App\Model\Product;
+
+class ProductTest extends \PHPUnit_Framework_TestCase
 {
     public function testReturnsSkuWhichHasBeenInitialized()
     {
@@ -54,6 +56,26 @@ class ProductTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($product->isSpecialPriceApplied());
 
         $product = new Product([]);
+        $this->assertFalse($product->isSpecialPriceApplied());
+    }
+
+    public function testLoadsDataFromResource()
+    {
+        $resource = $this->getMock('\App\Model\Resource\IResourceEntity');
+        $resource->expects($this->any())
+            ->method('find')
+            ->with($this->equalTo(42))
+            ->will($this->returnValue(['name' => 'foo']));
+
+        $product = new Product([]);
+        $product->load($resource, 42);
+
+        $this->assertEquals('foo', $product->getName());
+    }
+
+    public function testCastsSpecialPriceToFloatWhenChecksForApplied()
+    {
+        $product = new Product(['special_price' => '0.00']);
         $this->assertFalse($product->isSpecialPriceApplied());
     }
 }

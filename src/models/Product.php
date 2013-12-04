@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/Entity.php';
+namespace App\Model;
 
 class Product extends Entity
 {
@@ -35,6 +35,6 @@ class Product extends Entity
 
     public function isSpecialPriceApplied()
     {
-        return (bool) $this->getSpecialPrice();
+        return $this->getSpecialPrice() > 0;
     }
 }

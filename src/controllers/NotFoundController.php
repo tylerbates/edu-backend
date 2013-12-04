@@ -1,9 +1,11 @@
 <?php
+namespace App\Controller;
 
 class NotFoundController
 {
     public function notFoundAction()
     {
-        require_once __DIR__.'/../views/not_found.phtml';
+        $view = 'not_found';
+        require_once __DIR__ . '/../views/layout/base.phtml';
     }
 }

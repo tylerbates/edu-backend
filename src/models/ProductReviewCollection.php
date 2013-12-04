@@ -1,8 +1,7 @@
 <?php
-require_once 'ProductReview.php';
-require_once 'EntityCollection.php';
+namespace App\Model;
 
-class ProductReviewCollection extends Collection
+class ProductReviewCollection extends EntityCollection
 {
     public function getProductReviews()
     {

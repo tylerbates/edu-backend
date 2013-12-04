@@ -1,10 +1,9 @@
 <?php
-require_once 'Entity.php';
-require_once 'Resource/IResourceCollection.php';
+namespace App\Model;
 
-class Collection implements IteratorAggregate
+class EntityCollection implements \IteratorAggregate
 {
-    public function __construct(IResourceCollection $resource)
+    public function __construct(Resource\IResourceCollection $resource)
     {
         $this->_resource = $resource;
         $this->_setEntities();
@@ -19,7 +18,7 @@ class Collection implements IteratorAggregate
 
     public function getIterator()
     {
-        return new ArrayIterator($this->_resource->fetch());
+        return new \ArrayIterator($this->_resource->fetch());
     }
 
     public function getSize()

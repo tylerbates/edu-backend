@@ -1,6 +1,5 @@
 <?php
-require_once __DIR__ . '/Product.php';
-require_once __DIR__ . '/Entity.php';
+namespace App\Model;
 
 class ProductReview extends Entity
 {

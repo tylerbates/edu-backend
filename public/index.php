@@ -1,28 +1,34 @@
 <?php
-//ini_set('display_errors', 1);
+namespace App;
 
-require_once __DIR__ . '/../src/models/Router.php';
+require_once __DIR__ . '/../autoloader.php';
+
+ini_set('display_errors', 1);
 
 try
 {
-    $router = new Router($_GET['page']);
+    $defaultPath = 'product_list';
+    $routePath = isset($_GET['page']) ? $_GET['page'] : $defaultPath ;
+
+    $router = new Model\Router($routePath);
     $controllerName = $router->getController();
-    require_once __DIR__ . "/../src/controllers/{$controllerName}.php";
     $controller = new $controllerName;
     $actionName = $router->getAction();
     $controller->$actionName();
 }
-catch (NotFoundException $e)
+catch (Model\RouterException $e)
 {
-    require_once __DIR__ . "/../src/controllers/NotFoundController.php";
-    $controller = new NotFoundController();
-    $controller->notFoundAction();
+    if($e->getMessage() == 'Page not found')
+    {
+        $controller = new Controller\NotFoundController();
+        $controller->notFoundAction();
+    }
+    elseif($e->getMessage() == 'Redirecting on default page')
+    {
+        $controller = new Controller\ProductController();
+        $controller->listAction();
+    }
 }
-catch (DefaultPageException $e)
-{
-    require_once __DIR__ . "/../src/controllers/ProductController.php";
-    $controller = new ProductController();
-    $controller->listAction();
-}
+
 
 

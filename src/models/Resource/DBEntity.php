@@ -1,5 +1,5 @@
 <?php
-require_once 'IResourceEntity.php';
+namespace App\Model\Resource;
 
 class DBEntity implements IResourceEntity
 {
@@ -7,17 +7,18 @@ class DBEntity implements IResourceEntity
     private $_table;
     private $_primaryKey;
 
-    public function __construct(PDO $connection, $table, $primary_key)
+    public function __construct(\PDO $connection, Table\ITable $table)
     {
         $this->_connection = $connection;
         $this->_table = $table;
-        $this->_primaryKey = $primary_key;
     }
 
     public function find($id)
     {
-        return $this->_connection
-            ->query("SELECT * FROM {$this->_table} WHERE {$this->_primaryKey} = {$id}")
-            ->fetch(PDO::FETCH_ASSOC);
+        $stmt = $this->_connection->prepare(
+            "SELECT * FROM {$this->_table->getName()} WHERE {$this->_table->getPrimaryKey()} = :id"
+        );
+        $stmt->execute([':id' => $id]);
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 }

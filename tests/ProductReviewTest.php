@@ -1,7 +1,10 @@
 <?php
-require_once __DIR__ . '/../src//models/ProductReview.php';
+namespace Test\Model;
 
-class ReviewTest extends PHPUnit_Framework_TestCase
+use App\Model\ProductReview;
+use App\Model\Product;
+
+class ReviewTest extends \PHPUnit_Framework_TestCase
 {
     public function testReturnsNameWhichHasBeenInitialized()
     {
@@ -47,5 +50,19 @@ class ReviewTest extends PHPUnit_Framework_TestCase
         $review = new ProductReview(['product' => $productFoo]);
         $this->assertTrue($review->belongsToProduct($productFoo));
         $this->assertFalse($review->belongsToProduct($productBar));
+    }
+
+    public function testLoadsDataFromResource()
+    {
+        $resource = $this->getMock('\App\Model\Resource\IResourceEntity');
+        $resource->expects($this->any())
+            ->method('find')
+            ->with($this->equalTo(42))
+            ->will($this->returnValue(['name' => 'Vasia']));
+
+        $productReview = new ProductReview([]);
+        $productReview->load($resource, 42);
+
+        $this->assertEquals('Vasia', $productReview->getName());
     }
 }

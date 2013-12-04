@@ -1,11 +1,14 @@
 <?php
-require_once __DIR__ . '/../models/ProductCollection.php';
-require_once __DIR__ . '/../models/Product.php';
-require_once __DIR__ . '/../models/ProductReviewCollection.php';
-require_once __DIR__ . '/../models/ProductReview.php';
-require_once __DIR__ . '/../models/Resource/DBCollection.php';
-require_once __DIR__ . '/../models/Resource/DBEntity.php';
-require_once __DIR__ . '/../models/Resource/DBconfig.php';
+namespace App\Controller;
+
+use App\Model\Resource\DBCollection;
+use App\Model\Resource\DBEntity;
+use App\Model\Resource\DBConfig;
+use App\Model\Resource\Table\Product as ProductTable;
+use App\Model\Resource\Table\Review as ReviewTable;
+use App\Model\ProductCollection;
+use App\Model\ProductReviewCollection;
+use App\Model\Product;
 
 class ProductController
 {
@@ -23,25 +26,26 @@ class ProductController
 
     public function listAction()
     {
-        $resource = new DBCollection($this->_connection,'products');
+        $resource = new DBCollection($this->_connection,new ProductTable);
         $_products = new ProductCollection($resource);
         $products = $_products->getProducts();
-        require_once __DIR__ . '/../views/product_list.phtml';
+        $view = 'product_list';
+        require_once __DIR__ . '/../views/layout/base.phtml';
     }
 
     public function viewAction()
     {
         $product = new Product([]);
 
-        $resource = new DBEntity($this->_connection,'products','product_id');
+        $resource = new DBEntity($this->_connection,new ProductTable);
         $product->load($resource,$_GET['id']);
 
-        $resource = new DBCollection($this->_connection,'reviews');
+        $resource = new DBCollection($this->_connection,new ReviewTable);
         $reviews = new ProductReviewCollection($resource);
         $reviews->filterByProduct($product);
         $_reviews = $reviews->getProductReviews();
         $average_rating = $reviews->getAverageRating();
-
-        require_once __DIR__ . '/../views/product_view.phtml';
+        $view = 'product_view';
+        require_once __DIR__ . '/../views/layout/base.phtml';
     }
 }

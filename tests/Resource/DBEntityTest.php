@@ -1,27 +1,40 @@
 <?php
-require_once __DIR__ . '/../../src/models/Resource/IResourceEntity.php';
-require_once __DIR__ . '/../../src/models/Resource/DBEntity.php';
+namespace Test\Model\Resource;
 
-class EntityCollectionTest extends PHPUnit_Extensions_Database_TestCase
+use App\Model\Resource\DBEntity;
+
+class EntityCollectionTest extends \PHPUnit_Extensions_Database_TestCase
 {
+    public function testReturnsFoundDataFromDB()
+    {
+        $entity = $this->_getResource();
+
+        $this->assertEquals(['id'=>1,'data'=>'foo'],$entity->find(1));
+        $this->assertEquals(['id'=>2,'data'=>'bar'],$entity->find(2));
+    }
+
     public function getConnection()
     {
-        $pdo = new PDO('mysql:host=localhost;dbname=student_unit','root','123qweasdzxc');
+        $pdo = new \PDO('mysql:host=localhost;dbname=student_unit','root','123qweasdzxc');
         return $this->createDefaultDBConnection($pdo,'student_unit');
     }
 
     public function getDataSet()
     {
-        return new PHPUnit_Extensions_Database_DataSet_YamlDataSet(
+        return new \PHPUnit_Extensions_Database_DataSet_YamlDataSet(
             __DIR__ . '/DBEntityTest/fixtures/abstract_entity.yaml'
         );
     }
 
-    public function testReturnsFoundDataFromDB()
+    private function _getResource()
     {
-        $entity = new DBEntity($this->getConnection()->getConnection(),'abstract_collection','id');
-
-        $this->assertEquals(['id'=>1,'data'=>'foo'],$entity->find(1));
-        $this->assertEquals(['id'=>2,'data'=>'bar'],$entity->find(2));
+        $table = $this->getMock('\App\Model\Resource\Table\ITable');
+        $table->expects($this->any())
+              ->method('getName')
+              ->will($this->returnValue('abstract_collection'));
+        $table->expects($this->any())
+            ->method('getPrimaryKey')
+            ->will($this->returnValue('id'));
+        return new DBEntity($this->getConnection()->getConnection(),$table);
     }
 }
