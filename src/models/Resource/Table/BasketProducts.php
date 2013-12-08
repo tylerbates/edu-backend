@@ -1,20 +1,20 @@
 <?php
 namespace App\Model\Resource\Table;
 
-class Review implements ITable
+class BasketProducts implements ITable
 {
     public function getName()
     {
-        return 'reviews';
+        return 'basket_products';
     }
 
     public function getPrimaryKey()
     {
-        return 'review_id';
+        return 'link_id';
     }
 
     public function getParams()
     {
-        // TODO: Implement getParameter() method.
+        return ['product_id','basket_id'];
     }
 }

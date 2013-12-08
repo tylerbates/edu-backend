@@ -98,3 +98,48 @@ CREATE TABLE reviews (
 
 insert into reviews (name, email,text,rating,product_id) values ('asfa','sadgsadg','sdasdgsadasd',2,1),('asfa','sadgsadg','sdasdgsadasd',2,2),('asfa','sadgsadg','sdasdgsadasd',2,3);
 insert into reviews (name, email,text,rating,product_id) values ('asfa','sadgsadg','sdasdgsadasd',3,1);
+
+ALTER TABLE customers ADD COLUMN password VARCHAR(255) COLLATE utf8_bin NOT NULL;
+
+ALTER TABLE customers DROP COLUMN name;
+
+ALTER TABLE customers ADD COLUMN name VARCHAR(255) COLLATE utf8_bin NOT NULL UNIQUE;
+
+CREATE TABLE baskets (
+  basket_id  INT(11) UNSIGNED  NOT NULL  AUTO_INCREMENT,
+  customer_id  INT(11) UNSIGNED  NULL,
+
+  PRIMARY KEY (basket_id)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8  AUTO_INCREMENT=1;
+
+ALTER TABLE baskets ADD CONSTRAINT FOREIGN KEY (customer_id) REFERENCES customers(customer_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+CREATE TABLE basket_products (
+  link_id  INT(11) UNSIGNED  NOT NULL  AUTO_INCREMENT,
+  product_id  INT(11) UNSIGNED  NOT NULL,
+  basket_id  INT(11) UNSIGNED  NOT NULL,
+
+  PRIMARY KEY (link_id)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8  AUTO_INCREMENT=1;
+
+ALTER TABLE basket_products ADD CONSTRAINT FOREIGN KEY (product_id) REFERENCES products(product_id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE basket_products ADD CONSTRAINT FOREIGN KEY (basket_id) REFERENCES baskets(basket_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+INSERT INTO baskets (customer_id) VALUES (25),(29),(32);
+
+INSERT INTO basket_products (product_id,basket_id) VALUES (1,4),(2,4),(1,5);
+
+SELECT p.*  FROM products as p
+  INNER JOIN basket_products as bp on p.product_id = bp.product_id
+  INNER JOIN baskets as b on b.basket_id = bp.basket_id AND b.customer_id=37;
+
+
+insert into customers (name) VALUE ('294de3557d9d00b3d2d8a1e6aab028cf');
+
+drop event delete_anonymous_customers;
+CREATE EVENT delete_anonymous_customers
+  ON SCHEDULE
+    EVERY 30 SECOND
+  DO
+    DELETE FROM customers WHERE name LIKE 'anonymous2_________';
+

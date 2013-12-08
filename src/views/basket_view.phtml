@@ -1,0 +1,19 @@
+<h1><a href="/">&larr;</a>Your Basket</h1>
+
+
+<?php foreach ($products as $_product): ?>
+    <a href="?page=product_view&id=<?php echo $_product->getId(); ?>">
+        <div class="item">
+            <img src="<?php echo $_product->getImage(); ?>">
+            <h2><?php echo $_product->getName(); ?></h2>
+            <span><p><?php echo "Sku: " . $_product->getSku();?></span>
+            <p>Price: <span class="product_price <?php if($_product->isSpecialPriceApplied()): ?>old_price<?php endif; ?>">
+                            <?php echo $_product->getPrice(); ?>
+                        </span>
+                <?php if($_product->isSpecialPriceApplied()): ?>
+                    <span class="product_price"><?php echo " " . $_product->getSpecialPrice(); ?></span>
+                <?php endif; ?>
+            <p><a href="?page=basket_delete&id=<?php echo $_product->getId(); ?>">delete</a>
+        </div>
+    </a>
+<?php endforeach; ?>

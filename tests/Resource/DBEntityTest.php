@@ -26,6 +26,46 @@ class EntityCollectionTest extends \PHPUnit_Extensions_Database_TestCase
         );
     }
 
+    public function testEscapesFilterParameter()
+    {
+        $resource = $this->_getResource();
+        $this->assertEquals(['id' => 2, 'data' => 'bar'], $resource->find('2 - 1'));
+    }
+
+    public function testSavesDataInDB()
+    {
+        $resource= $this->_getResource();
+
+        $resource->save(['id' => 3, 'data' => 'baz']);
+
+        $queryTable = $this->getConnection()->createQueryTable(
+            'abstract_collection', 'SELECT * FROM abstract_collection'
+        );
+
+        $expectedTable = (new \PHPUnit_Extensions_Database_DataSet_YamlDataSet(
+            __DIR__ . '/DBEntityTest/expectations/testSavesDataInDb.yaml'
+        ))->getTable('abstract_collection');
+
+        $this->assertTablesEqual($expectedTable,$queryTable);
+    }
+
+    public function testUpdatesEntityIfExists()
+    {
+        $resource = $this->_getResource();
+
+        $resource->save(['id' => 2, 'data' => 'baz']);
+
+        $queryTable = $this->getConnection()->createQueryTable(
+            'abstract_collection', 'SELECT * FROM abstract_collection'
+        );
+
+        $expectedTable = (new \PHPUnit_Extensions_Database_DataSet_YamlDataSet(
+            __DIR__ . '/DBEntityTest/expectations/testUpdatesEntityIfExists.yaml'
+        ))->getTable('abstract_collection');
+
+        $this->assertTablesEqual($expectedTable,$queryTable);
+    }
+
     private function _getResource()
     {
         $table = $this->getMock('\App\Model\Resource\Table\ITable');

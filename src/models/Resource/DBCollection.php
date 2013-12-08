@@ -51,7 +51,7 @@ class DBCollection implements IResourceCollection
     {
         $conditions = [];
         foreach ($this->_filters as $column => $value) {
-            $parameter = ':_param_' . $column;
+            $parameter = ':' . $column;
             $conditions[] = $column . ' = ' . $parameter . '';
             $this->_bind[$parameter] = $value;
         }
@@ -63,5 +63,25 @@ class DBCollection implements IResourceCollection
         foreach ($this->_bind as $parameter => $value) {
             $stmt->bindValue($parameter, $value);
         }
+    }
+
+    public function findForBasket($id)
+    {
+        $stmt = $this->_connection->prepare(
+            "SELECT p.*  FROM {$this->_table->getName()} as p
+              INNER JOIN basket_products as bp on p.product_id = bp.product_id
+              INNER JOIN baskets as b on b.basket_id = bp.basket_id AND b.customer_id=:id"
+        );
+        $stmt->execute([':id' => $id]);
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    public function delete()
+    {
+        $sql = "DELETE FROM {$this->_table->getName()} WHERE " . $this->_prepareFilters() . " LIMIT 1";
+        var_dump($sql);
+        $stmt = $this->_connection->prepare($sql);
+        $this->_bindValues($stmt);
+        $stmt->execute();
     }
 }

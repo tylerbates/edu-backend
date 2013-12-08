@@ -12,4 +12,9 @@ class Product implements ITable
     {
         return 'product_id';
     }
+
+    public function getParams()
+    {
+        // TODO: Implement getParameter() method.
+    }
 }
