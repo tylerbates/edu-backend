@@ -1,0 +1,21 @@
+<h1><a href="/">&larr;</a>Entrance</h1>
+<div class="item">
+    <?php if(!$logged_in): ?>
+    <form action = "/?page=customer_login" method="post">
+        <table>
+            <tr>
+                <td> <label for="name">Name:</label></td>
+                <td><input type="text" id="name" name="customer[name]"></td>
+            </tr>
+            <tr>
+                <td><label for="password">Passowrd:</label></td>
+                <td><input type="password" id="password" name="customer[password]"></td>
+            </tr>
+        </table>
+        <input type="submit" value="Enter">
+    </form>
+    <?php endif; if($logged_in):?>
+        You have logged in as <?php echo \App\Model\Session::getUserName();?>
+        <a href="/">Return to product list?</a>
+    <?php endif; ?>
+</div>

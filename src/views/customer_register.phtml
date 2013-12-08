@@ -1,0 +1,20 @@
+<h1><a href="/">&larr;</a>Join us!</h1>
+<div class="item">
+    <?php if(!$registered): ?>
+    <form action = "/?page=customer_register" method="post">
+        <table>
+            <tr>
+                <td> <label for="name">Name:</label></td>
+                <td><input type="text" id="name" name="customer[name]"></td>
+            </tr>
+            <tr>
+                <td><label for="password">Passowrd:</label></td>
+                <td><input type="password" id="password" name="customer[password]"></td>
+            </tr>
+        </table>
+        <input type="submit" value="Register">
+    </form>
+    <?php endif; if($registered):?>
+        <a href="/">Congratulations! Return to product list</a>?
+    <?php endif; ?>
+</div>

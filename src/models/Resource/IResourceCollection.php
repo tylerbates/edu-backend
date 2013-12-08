@@ -8,4 +8,8 @@ interface IResourceCollection
     public function filterBy($column, $value);
 
     public function average($column);
+
+    public function findForBasket($id);
+
+    public function delete();
 }

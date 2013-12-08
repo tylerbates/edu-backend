@@ -3,27 +3,14 @@ namespace App\Controller;
 
 use App\Model\Resource\DBCollection;
 use App\Model\Resource\DBEntity;
-use App\Model\Resource\DBConfig;
 use App\Model\Resource\Table\Product as ProductTable;
 use App\Model\Resource\Table\Review as ReviewTable;
 use App\Model\ProductCollection;
 use App\Model\ProductReviewCollection;
 use App\Model\Product;
 
-class ProductController
+class ProductController extends Controller
 {
-    private $_connection;
-
-    function __construct()
-    {
-        $this->_connection = DBConfig::connect();
-    }
-
-    function __destruct()
-    {
-        unset($this->_connection);
-    }
-
     public function listAction()
     {
         $resource = new DBCollection($this->_connection,new ProductTable);

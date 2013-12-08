@@ -6,4 +6,7 @@ interface ITable
     public function getName();
 
     public function getPrimaryKey();
+
+    public function getParams();
+
 }

@@ -21,4 +21,66 @@ class DBEntity implements IResourceEntity
         $stmt->execute([':id' => $id]);
         return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
+
+    public function save($data)
+    {
+        $fields = array_keys($data);
+        if($this->_itemExists($data))
+        {
+            $stmt = $this->_updateItem($fields);
+        }
+        else
+        {
+            $stmt = $this->_insertItem($fields);
+        }
+        $stmt->execute(array_combine($this->_prepareBinds($fields),$data));
+
+        return $this->_connection->lastInsertId($this->_table->getPrimaryKey());
+    }
+
+    private function _itemExists($data)
+    {
+        $id = 0;
+        if(isset($data[$this->_table->getPrimaryKey()]))
+        {
+            $id = $this->find($data[$this->_table->getPrimaryKey()]);
+        }
+
+        return (bool) $id;
+    }
+
+    private function _prepareBinds($fields)
+    {
+        $binds = array_map(
+            function ($field) {
+                return ":{$field}";
+            }, $fields);
+        return $binds;
+    }
+
+    private function _insertItem($fields)
+    {
+        $filedList = implode(',', $fields);
+        $bindList = implode(',', $this->_prepareBinds($fields));
+        $stmt = $this->_connection->prepare(
+            "INSERT INTO {$this->_table->getName()} ({$filedList}) VALUES ({$bindList})"
+        );
+        return $stmt;
+    }
+
+    private function _updateItem($fields)
+    {
+        $update= array_map(
+            function ($field) {
+                return "{$field} = :{$field}";
+            }, $fields);
+
+        $updateList = implode(',',$update);
+        $condition = "{$this->_table->getPrimaryKey()} = :{$this->_table->getPrimaryKey()}";
+        $stmt = $this->_connection->prepare(
+            "UPDATE {$this->_table->getName()} SET {$updateList} WHERE {$condition}"
+        );
+
+        return $stmt;
+    }
 }

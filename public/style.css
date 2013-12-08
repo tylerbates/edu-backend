@@ -34,10 +34,6 @@ a:hover
     color: #1b1b1b;
 }
 
-div
-{
-    box-shadow:0 10px 7px rgba(0, 0, 0, 0.7);
-}
 
 .list
 {
@@ -45,6 +41,7 @@ div
     width: 800px;
     background: #9eb3f4;
     padding: 10px;
+    box-shadow:0 10px 7px rgba(0, 0, 0, 0.7);
 }
 
 .item
@@ -79,4 +76,9 @@ div
 body
 {
     background-color: #e6e6e6;
+}
+
+.login
+{
+    float: right;
 }
