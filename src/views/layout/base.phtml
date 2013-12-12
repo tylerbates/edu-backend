@@ -9,11 +9,11 @@
         <?php if(!\App\Model\Session::isUserNameSet()): ?>
             <a href="?page=customer_login">Login</a> |
             <a href="?page=customer_register">Register</a> |
-            <a href="?page=basket_view"> Basket</a>
+            <a href="?page=quote_list"> Cart</a>
         <?php endif; if(\App\Model\Session::isUserNameSet()):?>
             Logged in as <?php echo \App\Model\Session::getUserName(); ?>
             <a href="?page=customer_exit"> Exit</a> |
-            <a href="?page=basket_view"> Basket</a>
+            <a href="?page=quote_list"> Cart</a>
         <?php endif; ?>
     </div>
     <div class="list">

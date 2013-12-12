@@ -7,6 +7,5 @@ interface ITable
 
     public function getPrimaryKey();
 
-    public function getParams();
-
+    public function getSearchKey();
 }

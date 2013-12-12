@@ -9,8 +9,8 @@ class EntityCollectionTest extends \PHPUnit_Extensions_Database_TestCase
     {
         $entity = $this->_getResource();
 
-        $this->assertEquals(['id'=>1,'data'=>'foo'],$entity->find(1));
-        $this->assertEquals(['id'=>2,'data'=>'bar'],$entity->find(2));
+        $this->assertEquals(['id'=>1,'data'=>'foo'],$entity->find(['id'=>1]));
+        $this->assertEquals(['id'=>2,'data'=>'bar'],$entity->find(['data'=>'bar']));
     }
 
     public function getConnection()
@@ -29,7 +29,7 @@ class EntityCollectionTest extends \PHPUnit_Extensions_Database_TestCase
     public function testEscapesFilterParameter()
     {
         $resource = $this->_getResource();
-        $this->assertEquals(['id' => 2, 'data' => 'bar'], $resource->find('2 - 1'));
+        $this->assertEquals(['id' => 2, 'data' => 'bar'], $resource->find(['id'=>'2 - 1']));
     }
 
     public function testSavesDataInDB()
@@ -66,6 +66,22 @@ class EntityCollectionTest extends \PHPUnit_Extensions_Database_TestCase
         $this->assertTablesEqual($expectedTable,$queryTable);
     }
 
+    public function testDeletesEntityFromDB()
+    {
+        $resource = $this->_getResource();
+        $resource->delete(1);
+
+        $queryTable = $this->getConnection()->createQueryTable(
+            'abstract_collection', 'SELECT * FROM abstract_collection'
+        );
+
+        $expectedTable = (new \PHPUnit_Extensions_Database_DataSet_YamlDataSet(
+            __DIR__ . '/DBEntityTest/expectations/testDeletesEntityFromDB.yaml'
+        ))->getTable('abstract_collection');
+
+        $this->assertTablesEqual($expectedTable,$queryTable);
+    }
+
     private function _getResource()
     {
         $table = $this->getMock('\App\Model\Resource\Table\ITable');
@@ -74,6 +90,9 @@ class EntityCollectionTest extends \PHPUnit_Extensions_Database_TestCase
               ->will($this->returnValue('abstract_collection'));
         $table->expects($this->any())
             ->method('getPrimaryKey')
+            ->will($this->returnValue('id'));
+        $table->expects($this->any())
+            ->method('getSearchKey')
             ->will($this->returnValue('id'));
         return new DBEntity($this->getConnection()->getConnection(),$table);
     }

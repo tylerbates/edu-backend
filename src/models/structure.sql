@@ -1,6 +1,7 @@
 CREATE TABLE customers (
     customer_id  INT(11) UNSIGNED  NOT NULL  AUTO_INCREMENT,
-    name VARCHAR(255) COLLATE utf8_bin NULL,
+    name VARCHAR(255) COLLATE utf8_bin NOT NULL UNIQUE,
+    password VARCHAR(255) COLLATE utf8_bin NOT NULL,
     rating DECIMAL(10,2) NULL,
 
    PRIMARY KEY (customer_id)
@@ -83,7 +84,6 @@ update products set image='http://www.ferra.ru/images/320/320657.jpg', price=100
 update products set image='http://paulov.ru/files/2011/02/motorola_L7.jpg', price=2000, special_price=1999.99 where product_id = 2;
 update products set image='http://img81.imageshack.us/img81/5471/img1135jpg.jpg', price=10000, special_price=9999.99 where product_id = 3;
 
-
 CREATE TABLE reviews (
   review_id  INT(11) UNSIGNED  NOT NULL  AUTO_INCREMENT,
   name VARCHAR(255) COLLATE utf8_bin NULL,
@@ -99,47 +99,21 @@ CREATE TABLE reviews (
 insert into reviews (name, email,text,rating,product_id) values ('asfa','sadgsadg','sdasdgsadasd',2,1),('asfa','sadgsadg','sdasdgsadasd',2,2),('asfa','sadgsadg','sdasdgsadasd',2,3);
 insert into reviews (name, email,text,rating,product_id) values ('asfa','sadgsadg','sdasdgsadasd',3,1);
 
-ALTER TABLE customers ADD COLUMN password VARCHAR(255) COLLATE utf8_bin NOT NULL;
 
-ALTER TABLE customers DROP COLUMN name;
 
-ALTER TABLE customers ADD COLUMN name VARCHAR(255) COLLATE utf8_bin NOT NULL UNIQUE;
-
-CREATE TABLE baskets (
-  basket_id  INT(11) UNSIGNED  NOT NULL  AUTO_INCREMENT,
-  customer_id  INT(11) UNSIGNED  NULL,
-
-  PRIMARY KEY (basket_id)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8  AUTO_INCREMENT=1;
-
-ALTER TABLE baskets ADD CONSTRAINT FOREIGN KEY (customer_id) REFERENCES customers(customer_id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-CREATE TABLE basket_products (
+CREATE TABLE customer_products (
   link_id  INT(11) UNSIGNED  NOT NULL  AUTO_INCREMENT,
+  customer_id  INT(11) UNSIGNED  NOT NULL,
   product_id  INT(11) UNSIGNED  NOT NULL,
-  basket_id  INT(11) UNSIGNED  NOT NULL,
 
   PRIMARY KEY (link_id)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8  AUTO_INCREMENT=1;
 
-ALTER TABLE basket_products ADD CONSTRAINT FOREIGN KEY (product_id) REFERENCES products(product_id) ON UPDATE CASCADE ON DELETE CASCADE;
-ALTER TABLE basket_products ADD CONSTRAINT FOREIGN KEY (basket_id) REFERENCES baskets(basket_id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE customer_products ADD CONSTRAINT FOREIGN KEY (product_id) REFERENCES products(product_id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE customer_products ADD CONSTRAINT FOREIGN KEY (customer_id) REFERENCES customers(customer_id) ON UPDATE CASCADE ON DELETE CASCADE;
 
-INSERT INTO baskets (customer_id) VALUES (25),(29),(32);
-
-INSERT INTO basket_products (product_id,basket_id) VALUES (1,4),(2,4),(1,5);
 
 SELECT p.*  FROM products as p
-  INNER JOIN basket_products as bp on p.product_id = bp.product_id
-  INNER JOIN baskets as b on b.basket_id = bp.basket_id AND b.customer_id=37;
+  INNER JOIN customer_products as cp on p.product_id = cp.product_id;
 
-
-insert into customers (name) VALUE ('294de3557d9d00b3d2d8a1e6aab028cf');
-
-drop event delete_anonymous_customers;
-CREATE EVENT delete_anonymous_customers
-  ON SCHEDULE
-    EVERY 30 SECOND
-  DO
-    DELETE FROM customers WHERE name LIKE 'anonymous2_________';
-
+alter table customer_products add column qty INT(11) UNSIGNED NOT NULL;

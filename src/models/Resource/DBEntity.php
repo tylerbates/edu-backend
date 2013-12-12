@@ -7,18 +7,24 @@ class DBEntity implements IResourceEntity
     private $_table;
     private $_primaryKey;
 
+    public function getTable()
+    {
+        return $this->_table;
+    }
+
     public function __construct(\PDO $connection, Table\ITable $table)
     {
         $this->_connection = $connection;
         $this->_table = $table;
     }
 
-    public function find($id)
+    public function find($param)
     {
+        $field = array_keys($param)[0];
         $stmt = $this->_connection->prepare(
-            "SELECT * FROM {$this->_table->getName()} WHERE {$this->_table->getPrimaryKey()} = :id"
+            "SELECT * FROM {$this->_table->getName()} WHERE {$field} = :id"
         );
-        $stmt->execute([':id' => $id]);
+        $stmt->execute([':id' => $param[$field]]);
         return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 
@@ -43,9 +49,8 @@ class DBEntity implements IResourceEntity
         $id = 0;
         if(isset($data[$this->_table->getPrimaryKey()]))
         {
-            $id = $this->find($data[$this->_table->getPrimaryKey()]);
+            $id = $this->find([$this->_table->getPrimaryKey()=>$data[$this->_table->getPrimaryKey()]]);
         }
-
         return (bool) $id;
     }
 
@@ -82,5 +87,12 @@ class DBEntity implements IResourceEntity
         );
 
         return $stmt;
+    }
+
+    public function delete($id)
+    {
+        $sql = "DELETE FROM {$this->_table->getName()} WHERE {$this->_table->getPrimaryKey()} = :id";
+        $stmt = $this->_connection->prepare($sql);
+        $stmt->execute([':id'=>$id]);
     }
 }

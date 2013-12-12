@@ -64,11 +64,11 @@ class ProductTest extends \PHPUnit_Framework_TestCase
         $resource = $this->getMock('\App\Model\Resource\IResourceEntity');
         $resource->expects($this->any())
             ->method('find')
-            ->with($this->equalTo(42))
+            ->with($this->equalTo(['id'=>42]))
             ->will($this->returnValue(['name' => 'foo']));
 
         $product = new Product([]);
-        $product->load($resource, 42);
+        $product->load($resource, 42, 'id');
 
         $this->assertEquals('foo', $product->getName());
     }

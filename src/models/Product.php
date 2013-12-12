@@ -37,4 +37,24 @@ class Product extends Entity
     {
         return $this->getSpecialPrice() > 0;
     }
+
+    public function setQty($qty)
+    {
+        $this->_data['qty'] = $qty;
+    }
+
+    public function getQty()
+    {
+        return $this->_getData('qty');
+    }
+
+    public function setLink($link_id)
+    {
+        $this->_data['link_id'] = $link_id;
+    }
+
+    public function getLink()
+    {
+        return $this->_getData('link_id');
+    }
 }

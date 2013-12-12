@@ -8,12 +8,20 @@ use App\Model\Resource\Table\Review as ReviewTable;
 use App\Model\ProductCollection;
 use App\Model\ProductReviewCollection;
 use App\Model\Product;
+use App\Model\Resource\Paginator as PaginatorAdapter;
+use Zend\Paginator\Paginator as ZendPaginator;
 
 class ProductController extends Controller
 {
     public function listAction()
     {
         $resource = new DBCollection($this->_connection,new ProductTable);
+        $paginatorAdapter = new PaginatorAdapter($resource);
+        $paginator = new ZendPaginator($paginatorAdapter);
+        $paginator
+            ->setItemCountPerPage(2)
+            ->setCurrentPageNumber(isset($_GET['p']) ? $_GET['p'] : 1);
+        $pages = $paginator->getPages();
         $_products = new ProductCollection($resource);
         $products = $_products->getProducts();
         $view = 'product_list';

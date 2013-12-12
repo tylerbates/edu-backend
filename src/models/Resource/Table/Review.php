@@ -13,8 +13,8 @@ class Review implements ITable
         return 'review_id';
     }
 
-    public function getParams()
+    public function getSearchKey()
     {
-        // TODO: Implement getParameter() method.
+        return 'review_id';
     }
 }

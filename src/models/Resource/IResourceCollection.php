@@ -9,7 +9,7 @@ interface IResourceCollection
 
     public function average($column);
 
-    public function findForBasket($id);
+    public function limit($limit, $offset = 0);
 
-    public function delete();
+    public function count();
 }

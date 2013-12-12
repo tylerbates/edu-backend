@@ -13,8 +13,8 @@ class Customer implements ITable
         return 'customer_id';
     }
 
-    public function getParams()
+    public function getSearchKey()
     {
-        // TODO: Implement getParameter() method.
+        return 'customer_id';
     }
 }

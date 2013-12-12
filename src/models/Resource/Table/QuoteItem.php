@@ -1,11 +1,11 @@
 <?php
 namespace App\Model\Resource\Table;
 
-class BasketProducts implements ITable
+class QuoteItem implements ITable
 {
     public function getName()
     {
-        return 'basket_products';
+        return 'customer_products';
     }
 
     public function getPrimaryKey()
@@ -13,8 +13,8 @@ class BasketProducts implements ITable
         return 'link_id';
     }
 
-    public function getParams()
+    public function getSearchKey()
     {
-        return ['product_id','basket_id'];
+        return 'customer_id';
     }
 }

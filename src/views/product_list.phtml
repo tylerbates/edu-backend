@@ -1,4 +1,7 @@
         <h1>Our Product List:</h1>
+        <?php for ($page = 1; $page <= $pages->pageCount; $page++): ?>
+            <a href="/?p=<?php echo $page; ?>"><?php echo $page; ?></a>
+        <?php endfor; ?>
             <?php foreach ($products as $_product): ?>
                 <a href="?page=product_view&id=<?php echo $_product->getId(); ?>">
                     <div class="item">
@@ -11,8 +14,12 @@
                         <?php if($_product->isSpecialPriceApplied()): ?>
                             <span class="product_price"><?php echo " " . $_product->getSpecialPrice(); ?></span>
                         <?php endif; ?>
-                        <p><a href="/?page=basket_add&id=<?php echo $_product->getId();?>">add to basket</a>
                     </div>
                 </a>
+                <form method="post" action="/?page=quote_add">
+                    <input type="hidden" id="product_id" name="product_id" value=<?php echo $_product->getId(); ?>>
+                    <input type="number" id="qty" name="qty">
+                    <input type="submit" value="add to cart">
+                </form>
             <?php endforeach; ?>
 

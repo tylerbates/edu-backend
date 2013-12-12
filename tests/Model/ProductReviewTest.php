@@ -57,11 +57,11 @@ class ReviewTest extends \PHPUnit_Framework_TestCase
         $resource = $this->getMock('\App\Model\Resource\IResourceEntity');
         $resource->expects($this->any())
             ->method('find')
-            ->with($this->equalTo(42))
-            ->will($this->returnValue(['name' => 'Vasia']));
+            ->with($this->equalTo(['id'=>42]))
+            ->will($this->returnValue(['id'=>42,'name' => 'Vasia']));
 
         $productReview = new ProductReview([]);
-        $productReview->load($resource, 42);
+        $productReview->load($resource, 42, 'id');
 
         $this->assertEquals('Vasia', $productReview->getName());
     }

@@ -1,7 +1,5 @@
 <?php
 namespace App\Model;
-use App\Controller\BasketController;
-use App\Controller\CustomerController;
 
 class Session
 {
@@ -11,53 +9,48 @@ class Session
         {
             session_start();
         }
-        if(!$this->isAuthorized())
-        {
-            $controller = new CustomerController();
-            $customer_id = $controller->registerAnonymous();
-            Session::setUser(['customer_id'=>$customer_id]);
-            $controller = new BasketController();
-            Session::setBasket($controller->createAnonymous());
-        }
     }
 
-    public static function setUser($user_info)
+    public function setUser($user_info)
     {
         $_SESSION['user'] = $user_info;
     }
 
-    public static function isAuthorized()
+    public function isAuthorized()
     {
         return isset($_SESSION['user']);
     }
 
-    public static function unsetUser()
+    public function unsetUser()
     {
-        unset($_SESSION['user'],$_SESSION['basket']);
+        unset($_SESSION['user']);
     }
 
-    public static function getUserId()
+    public function getUserId()
     {
         return $_SESSION['user']['customer_id'];
     }
 
-    public static function setBasket($id)
-    {
-        $_SESSION['basket'] = ['basket_id'=>$id];
-    }
-
-    public static function getBasket()
-    {
-        return $_SESSION['basket']['basket_id'];
-    }
-
-    public static function getUserName()
+    public function getUserName()
     {
         return $_SESSION['user']['name'];
     }
 
-    public static function isUserNameSet()
+    public function isUserNameSet()
     {
         return isset($_SESSION['user']['name']);
+    }
+
+    public function getProducts()
+    {
+        return $_SESSION['products'];
+    }
+
+    public function addProduct(QuoteItem $quote_item)
+    {
+        $_SESSION['products'][] = [
+            'product_id'=>$quote_item->getProductId(),
+            'qty'=>$quote_item->getQty()
+        ];
     }
 }

@@ -51,13 +51,12 @@ a:hover
     width: 720px;
     padding: 10px;
     border-radius: 4px;
-    max-height: 160px;
 }
 
 .item img
 {
     float: left;
-    max-height: 78%;
+    max-height: 140px;
     display: block;
     box-shadow:0 2px 1px rgba(0, 0, 0, 0.7);
 }

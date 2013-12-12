@@ -13,8 +13,8 @@ class Product implements ITable
         return 'product_id';
     }
 
-    public function getParams()
+    public function getSearchKey()
     {
-        // TODO: Implement getParameter() method.
+        return 'product_id';
     }
 }

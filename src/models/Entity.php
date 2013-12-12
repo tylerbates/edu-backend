@@ -20,8 +20,8 @@ class Entity
         return $this->_getData($key);
     }
 
-    public function load(Resource\IResourceEntity $resource, $id)
+    public function load(Resource\IResourceEntity $resource, $id, $pr_key)
     {
-        $this->_data = $resource->find($id);
+        $this->_data = $resource->find([$pr_key=>$id]);
     }
 }

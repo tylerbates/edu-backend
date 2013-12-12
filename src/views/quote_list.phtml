@@ -13,7 +13,17 @@
                 <?php if($_product->isSpecialPriceApplied()): ?>
                     <span class="product_price"><?php echo " " . $_product->getSpecialPrice(); ?></span>
                 <?php endif; ?>
-            <p><a href="?page=basket_delete&id=<?php echo $_product->getId(); ?>">delete</a>
+            <p>Quantity: <?php echo $_product->getQty()?>            <form method="post" action="/?page=quote_delete">
+                <input type="hidden" id="link_id" name="link_id" value="<?php echo $_product->getLink(); ?>">
+                <input type="submit" value="delete">
+            </form>
+
         </div>
     </a>
+    <form method="post" action="/?page=quote_update">
+        <input type="hidden" id="product_id" name="product_id" value="<?php echo $_product->getId(); ?>">
+        <input type="hidden" id="link_id" name="link_id" value="<?php echo $_product->getLink(); ?>">
+        Quantity: <input type="number" id="qty" name="qty" value="<?php echo $_product->getQty()?>">
+        <input type="submit" value="update">
+    </form>
 <?php endforeach; ?>
