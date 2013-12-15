@@ -60,8 +60,8 @@ class ReviewTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo(['id'=>42]))
             ->will($this->returnValue(['id'=>42,'name' => 'Vasia']));
 
-        $productReview = new ProductReview([]);
-        $productReview->load($resource, 42, 'id');
+        $productReview = new ProductReview([], $resource);
+        $productReview->load(42, 'id');
 
         $this->assertEquals('Vasia', $productReview->getName());
     }

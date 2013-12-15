@@ -4,10 +4,12 @@ namespace App\Model;
 class Entity
 {
     protected  $_data = array();
+    protected  $_resource;
 
-    public function __construct(array $data)
+    public function __construct(array $data, Resource\IResourceEntity $resource = null)
     {
         $this->_data = $data;
+        $this->_resource = $resource;
     }
 
     protected  function _getData($key)
@@ -20,8 +22,8 @@ class Entity
         return $this->_getData($key);
     }
 
-    public function load(Resource\IResourceEntity $resource, $id, $pr_key)
+    public function load($id, $pr_key)
     {
-        $this->_data = $resource->find([$pr_key=>$id]);
+        $this->_data = $this->_resource->find([$pr_key=>$id]);
     }
 }

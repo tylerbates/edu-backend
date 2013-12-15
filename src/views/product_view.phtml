@@ -1,21 +1,36 @@
-    <h1><a href="/">&larr;</a><?php echo $product->getName(); ?></h1>
-    <div class="item">
-        <img src="<?php echo $product->getImage(); ?>">
-        <span><p><?php echo "Sku: " . $product->getSku();?></span>
-        <p>Price: <span class="product_price <?php if($product->isSpecialPriceApplied()): ?>old_price<?php endif; ?>">
-            <?php echo $product->getPrice(); ?>
-        </span>
-        <?php if($product->isSpecialPriceApplied()): ?>
-        <span class="product_price"><?php echo " " . $product->getSpecialPrice(); ?></span>
-        <?php endif; ?>
-        <h2><?php echo "Average rating: " . $average_rating; ?></h2>
-    </div>
-    <h1>Reviews:</h1>
-        <?php foreach ($_reviews as $_review): ?>
-        <div class="item">
-                <h2><?php echo $_review->getName(); ?></h2>
-                <span><p><?php echo "E-mail: " . $_review->getEmail();?></span>
-                <span><p><?php echo "Text: " . $_review->getText(); ?></span>
-                <span><p><?php echo "Rating: " . $_review->getRating(); ?></span>
+<?php $product = $this->get('product'); ?>
+<div class="container">
+    <div class="jumbotron">
+        <div class="media">
+            <h2 class="media-heading"><?php echo $product->getName(); ?></h2>
+            <img class="media-object pull-left" src="<?php echo $product->getImage(); ?>">
+            <div class="media-body">
+                <span><p><?php echo "Sku: " . $product->getSku();?></span>
+                <p>Price:
+                        <span class="product_price <?php if($product->isSpecialPriceApplied()): ?>old_price<?php endif; ?>">
+                            <?php echo $product->getPrice(); ?>
+                        </span>
+                    <?php if($product->isSpecialPriceApplied()): ?>
+                        <span class="product_price"><?php echo " " . $product->getSpecialPrice(); ?></span>
+                    <?php endif; ?>
+                </p>
+                <h2><?php echo "Average rating: " . $this->get('rating'); ?></h2>
+            </div>
         </div>
-        <?php endforeach; ?>
+    </div>
+</div>
+<div class="container">
+    <div class="jumbotron">
+        <h2>Reviews:</h2>
+    </div>
+</div>
+<div class="container">
+    <?php foreach ($this->get('reviews') as $_review): ?>
+    <div class="jumbotron">
+        <h2><?php echo $_review->getName(); ?></h2>
+        <span><p><?php echo "E-mail: " . $_review->getEmail();?></span>
+        <span><p><?php echo "Text: " . $_review->getText(); ?></span>
+        <span><p><?php echo "Rating: " . $_review->getRating(); ?></span>
+    </div>
+    <?php endforeach; ?>
+</div>

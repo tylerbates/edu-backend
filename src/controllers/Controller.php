@@ -1,19 +1,12 @@
 <?php
 namespace App\Controller;
 
-use App\Model\Resource\DBConfig;
-
 class Controller
 {
-    protected  $_connection;
+    protected  $_di;
 
-    function __construct()
+    function __construct(\Zend\Di\Di $di)
     {
-        $this->_connection = DBConfig::connect();
-    }
-
-    function __destruct()
-    {
-        unset($this->_connection);
+        $this->_di = $di;
     }
 }

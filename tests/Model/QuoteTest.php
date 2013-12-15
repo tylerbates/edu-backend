@@ -15,29 +15,36 @@ class QuoteTest extends \PHPUnit_Framework_TestCase
                  ->method('find')
                  ->will($this->returnValue([['link_id'=>1,'customer_id'=>1,'product_id'=>1,'qty'=>3]]));
 
-        $quote = new Quote();
-        $quote->loadByCustomer($resource,1);
+        $quote = new Quote($resource);
+        $quote->loadByCustomer(1);
 
         $this->assertEquals([new QuoteItem(['link_id'=>1,'customer_id'=>1,'product_id'=>1,'qty'=>3])],$quote->getProducts());
     }
 
     public function testLoadsQuoteBySession()
     {
-        $resource = $this->getMock('App\Model\Session');
-        $resource->expects($this->any())
-                 ->method('getProducts')
-                 ->will($this->returnValue([['product_id'=>1,'qty'=>2]]));
+        $entity_resource = $this->getMock('App\Model\Resource\IResourceEntity');
 
-        $quote = new Quote();
-        $quote->loadBySession($resource);
+        $entity_resource->expects($this->any())
+            ->method('find')
+            ->will($this->returnValue([['link_id'=>1,'customer_id'=>1,'product_id'=>1,'qty'=>3]]));
 
-        $this->assertEquals([new QuoteItem(['product_id'=>1,'qty'=>2])],$quote->getProducts());
+        $session_resource = $this->getMock('App\Model\Session');
+        $session_resource->expects($this->any())
+                 ->method('getQuote')
+                 ->will($this->returnValue([[1]]));
+
+        $quote = new Quote($entity_resource);
+        $quote->loadBySession($session_resource);
+
+        $this->assertEquals([new QuoteItem(['link_id'=>1,'customer_id'=>1,'product_id'=>1,'qty'=>3])],$quote->getProducts());
     }
 
     public function testReturnsQuoteItemForProduct()
     {
         $product = new Product(['product_id'=>1,'name'=>'foo']);
-        $quote = new Quote();
+        $entity_resource = $this->getMock('App\Model\Resource\IResourceEntity');
+        $quote = new Quote($entity_resource);
         $quoteItem = $quote->getItemForProduct($product,1,2);
 
         $this->assertEquals(1,$quoteItem->getData('product_id'));

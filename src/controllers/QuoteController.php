@@ -1,31 +1,25 @@
 <?php
 namespace App\Controller;
 
-use App\Model\Quote;
-use App\Model\QuoteItemCollection;
-use App\Model\Resource\DBCollection;
-use App\Model\Resource\DBEntity;
 use App\Model\Resource\Table\QuoteItem as QuoteItemTable;
 use App\Model\Resource\Table\Product as ProductTable;
 use App\Model\Session;
-use App\Model\Product;
 
 class QuoteController extends Controller
 {
     public function addAction()
     {
         $session = new Session();
-        $resource = new DBEntity($this->_connection, new QuoteItemTable);
+        $resource = $this->_di->get('ResourceEntity', ['table' => new QuoteItemTable()]);
         $quoteItem = $this->_initQuoteItem();
-
         $quoteItem->addQty((int) $_POST['qty']);
-        if($session->isAuthorized())
+        $quoteItem->save($resource);
+        if(!$session->isAuthorized())
         {
-            $quoteItem->save($resource);
-        } else
-        {
-            $session->addProduct($quoteItem);
+            $session->addQuoteItem($quoteItem->getId());
         }
+
+
         header('Location: /');
     }
 
@@ -33,7 +27,7 @@ class QuoteController extends Controller
     {
         $quoteItem = $this->_initQuoteItem();
 
-        $resource = new DBEntity($this->_connection, new QuoteItemTable);
+        $resource = $this->_di->get('ResourceEntity', ['table' => new QuoteItemTable()]);
         $quoteItem->updateQty($_POST['qty']);
         $quoteItem->save($resource);
         header('Location: /?page=quote_list');
@@ -41,32 +35,41 @@ class QuoteController extends Controller
 
     public function deleteAction()
     {
+        $session = new Session();
         $quoteItem = $this->_initQuoteItem();
-        $resource = new DBEntity($this->_connection, new QuoteItemTable);
+        $resource = $this->_di->get('ResourceEntity', ['table' => new QuoteItemTable()]);
         $quoteItem->delete($resource);
+        if(!$session->isAuthorized())
+        {
+            $session->deleteQuoteItem($quoteItem->getId());
+        }
         header('Location: /?page=quote_list');
     }
 
     public function listAction()
     {
         $quote = $this->_initQuote();
-        $qi_collection_resource = new DBCollection($this->_connection, new QuoteItemTable);
-        $quoteItems = new QuoteItemCollection($qi_collection_resource);
+        $qi_collection_resource = $this->_di->get('ResourceCollection', ['table' => new QuoteItemTable()]);
+        $quoteItems = $this->_di->get('QuoteCollection',['resource'=>$qi_collection_resource]);
         $quoteItems->filterByQuote($quote);
-        $product_resource = new DBEntity($this->_connection, new ProductTable);
-        $products = $quoteItems->assignProducts(new Product([]),$product_resource);
-        $view = 'quote_list';
-        require_once __DIR__ . '/../views/layout/base.phtml';
+        $product_resource = $this->_di->get('ResourceEntity', ['table' => new ProductTable()]);
+        $prototype = $this->_di->get('Product',['resource' => $product_resource,'data'=>[]]);
+        $products = $quoteItems->assignProducts($prototype);
+
+        return $this->_di->get('View',[
+            'template'=>'quote_list',
+            'params'=>['products'=>$products]
+        ]);
     }
 
     private function _initQuote()
     {
-        $resource = new DBEntity($this->_connection,new QuoteItemTable);
-        $quote = new Quote();
+        $resource = $this->_di->get('ResourceEntity', ['table' => new QuoteItemTable()]);
+        $quote =$this->_di->get('Quote',['resource'=>$resource]);
         $session = new Session();
         if($session->isAuthorized())
         {
-            $quote->loadByCustomer($resource,$session->getUserId());
+            $quote->loadByCustomer($session->getUserId());
             return $quote;
         } else
         {
@@ -79,9 +82,11 @@ class QuoteController extends Controller
     {
         $quote = $this->_initQuote();
         $session = new Session();
-        $product_resource = new DBEntity($this->_connection,new ProductTable);
-        $product = new Product([]);
-        $product->load($product_resource,$_POST['product_id']);
+
+        $product_resource = $this->_di->get('ResourceEntity', ['table' => new ProductTable()]);
+        $product = $this->_di->get('Product',['resource' => $product_resource,'data'=>[]]);
+
+        $product->load($_POST['product_id'],(new ProductTable())->getPrimaryKey());
 
         $quoteItem = $quote->getItemForProduct($product, $session->getUserId(),(int) $_POST['link_id']);
         return $quoteItem;

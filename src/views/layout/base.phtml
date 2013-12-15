@@ -2,22 +2,32 @@
 <html>
 <head>
     <title>Student Webstore</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-    <div class="login">
-        <?php if(!\App\Model\Session::isUserNameSet()): ?>
-            <a href="?page=customer_login">Login</a> |
-            <a href="?page=customer_register">Register</a> |
-            <a href="?page=quote_list"> Cart</a>
-        <?php endif; if(\App\Model\Session::isUserNameSet()):?>
-            Logged in as <?php echo \App\Model\Session::getUserName(); ?>
-            <a href="?page=customer_exit"> Exit</a> |
-            <a href="?page=quote_list"> Cart</a>
-        <?php endif; ?>
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<nav class="navbar navbar-default" role="navigation">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+        <a class="navbar-brand" href="/?p=1">My Product Catalog</a>
     </div>
-    <div class="list">
-        <?php require_once __DIR__ . "/../{$view}.phtml"; ?>
-    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav navbar-right">
+            <?php if(!\App\Model\Session::isUserNameSet()): ?>
+            <li><a href="?page=customer_login">Login</a></li>
+            <li><a href="?page=customer_register">Register</a></li>
+            <?php endif; if(\App\Model\Session::isUserNameSet()):?>
+            <li><p class="navbar-text">Logged in as <?php echo \App\Model\Session::getUserName(); ?></p></li>
+            <li><a href="?page=customer_exit">Exit</a></li>
+            <?php endif; ?>
+            <li><a href="?page=quote_list">Cart</a></li>
+        </ul>
+    </div><!-- /.navbar-collapse -->
+</nav>
+<?php $this->renderTemplate(); ?>
 </body>
 </html>

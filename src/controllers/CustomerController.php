@@ -1,9 +1,6 @@
 <?php
 namespace App\Controller;
 
-use App\Model\Customer;
-use App\Model\Resource\DBCollection;
-use App\Model\Resource\DBEntity;
 use App\Model\Resource\Table\Customer as CustomerTable;
 use App\Model\Session;
 
@@ -19,7 +16,7 @@ class CustomerController extends Controller
     public function loginAction()
     {
         $logged_in = false;
-        $resource = new DBCollection($this->_connection,new CustomerTable);
+        $resource = $this->_di->get('ResourceCollection',['table' => new CustomerTable()]);
         if(isset($_POST['customer']))
         {
             $info = $_POST['customer'];
@@ -33,8 +30,10 @@ class CustomerController extends Controller
             $session = new Session();
             $session->setUser(['customer_id'=>(int) $logged_in[0]['customer_id'],'name'=>$logged_in[0]['name']]);
         }
-        $view = 'customer_login';
-        require_once __DIR__ . '/../views/layout/base.phtml';
+        return $this->_di->get('View',[
+            'template'=>'customer_login',
+            'params'=>['customer'=>$logged_in]
+        ]);
     }
 
     public function registerAction()
@@ -44,16 +43,19 @@ class CustomerController extends Controller
         {
             $registered = $this->_registerCustomer();
         }
-        $view = 'customer_register';
-        require_once __DIR__ . '/../views/layout/base.phtml';
+        return $this->_di->get('View',[
+            'template'=>'customer_register',
+            'params'=>['result'=>$registered]
+        ]);
     }
 
     private function _registerCustomer()
     {
-        $resource = new DBEntity($this->_connection,new CustomerTable);
+        $resource = $this->_di->get('ResourceEntity',['table' => new CustomerTable()]);
+
         $info = $_POST['customer'];
         $info['password'] = md5($info['password']);
-        $customer = new Customer($info);
+        $customer = $this->_di->get('Customer', ['resource'=>$resource, 'data'=>$info]);
         $customer->save($resource);
         return  $customer->getId();
     }
