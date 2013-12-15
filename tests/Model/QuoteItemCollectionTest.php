@@ -48,6 +48,6 @@ class QuoteItemCollectionTest extends \PHPUnit_Framework_TestCase
             ));
 
         $qicollection = new QuoteItemCollection($resource);
-        $qicollection->assignProducts(new Product([]),$productResource);
+        $qicollection->assignProducts(new Product([], $productResource),$productResource);
     }
 }

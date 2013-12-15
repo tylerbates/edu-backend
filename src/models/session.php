@@ -41,16 +41,23 @@ class Session
         return isset($_SESSION['user']['name']);
     }
 
-    public function getProducts()
+    public function getQuote()
     {
-        return $_SESSION['products'];
+        return $_SESSION['quote'];
     }
 
-    public function addProduct(QuoteItem $quote_item)
+    public function addQuoteItem($link_id)
     {
-        $_SESSION['products'][] = [
-            'product_id'=>$quote_item->getProductId(),
-            'qty'=>$quote_item->getQty()
-        ];
+        $_SESSION['quote'][] = $link_id;
+    }
+
+    public function deleteQuoteItem($link_id)
+    {
+        var_dump($link_id);
+        foreach($_SESSION['quote'] as $key => $itemId)
+        {
+            var_dump((int) $itemId);
+            if((int) $itemId == $link_id) unset($_SESSION['quote'][$key]);
+        }
     }
 }

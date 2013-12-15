@@ -1,29 +1,44 @@
-<h1><a href="/">&larr;</a>Your Basket</h1>
-
-
-<?php foreach ($products as $_product): ?>
-    <a href="?page=product_view&id=<?php echo $_product->getId(); ?>">
-        <div class="item">
-            <img src="<?php echo $_product->getImage(); ?>">
-            <h2><?php echo $_product->getName(); ?></h2>
-            <span><p><?php echo "Sku: " . $_product->getSku();?></span>
-            <p>Price: <span class="product_price <?php if($_product->isSpecialPriceApplied()): ?>old_price<?php endif; ?>">
+<div class="container">
+    <div class="jumbotron">
+        <h2>Your Cart:</h2>
+    </div>
+</div>
+<div class="container">
+    <?php
+        $products = $this->get('products');
+        foreach ($products as $_product):
+    ?>
+        <div class="jumbotron">
+            <div class="media">
+                <a class="pull-left" href="?page=product_view&id=<?php echo $_product->getId(); ?>">
+                    <img class="media-object" src="<?php echo $_product->getImage(); ?>">
+                </a>
+                <div class="media-body">
+                    <h2 class="media-heading"><?php echo $_product->getName(); ?></h2>
+                    <span><p><?php echo "Sku: " . $_product->getSku();?></span>
+                    <p>Price:
+                        <span class="product_price <?php if($_product->isSpecialPriceApplied()): ?>old_price<?php endif; ?>">
                             <?php echo $_product->getPrice(); ?>
                         </span>
-                <?php if($_product->isSpecialPriceApplied()): ?>
-                    <span class="product_price"><?php echo " " . $_product->getSpecialPrice(); ?></span>
-                <?php endif; ?>
-            <p>Quantity: <?php echo $_product->getQty()?>            <form method="post" action="/?page=quote_delete">
-                <input type="hidden" id="link_id" name="link_id" value="<?php echo $_product->getLink(); ?>">
-                <input type="submit" value="delete">
-            </form>
-
+                        <?php if($_product->isSpecialPriceApplied()): ?>
+                            <span class="product_price"><?php echo " " . $_product->getSpecialPrice(); ?></span>
+                        <?php endif; ?>
+                    </p>
+                    <form method="post" action="/?page=quote_update" class="navbar-form navbar-left">
+                        Quantity:
+                        <div class="form-group">
+                            <input type="hidden" id="product_id" name="product_id" value="<?php echo $_product->getId(); ?>">
+                            <input type="hidden" id="link_id" name="link_id" value="<?php echo $_product->getLink(); ?>">
+                            <input type="number" class="form-control" min="1" id="qty" name="qty" value="<?php echo $_product->getQty()?>">
+                        </div>
+                        <input type="submit" class="btn btn-default" value="update">
+                    </form>
+                    <form method="post" action="/?page=quote_delete" class="navbar-form navbar-right">
+                        <input type="hidden" id="link_id" name="link_id" value="<?php echo $_product->getLink(); ?>">
+                        <input type="submit" class="btn btn-default" value="delete">
+                    </form>
+                </div>
+            </div>
         </div>
-    </a>
-    <form method="post" action="/?page=quote_update">
-        <input type="hidden" id="product_id" name="product_id" value="<?php echo $_product->getId(); ?>">
-        <input type="hidden" id="link_id" name="link_id" value="<?php echo $_product->getLink(); ?>">
-        Quantity: <input type="number" id="qty" name="qty" value="<?php echo $_product->getQty()?>">
-        <input type="submit" value="update">
-    </form>
-<?php endforeach; ?>
+    <?php endforeach; ?>
+</div>

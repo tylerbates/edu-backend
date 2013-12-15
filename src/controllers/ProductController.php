@@ -1,46 +1,44 @@
 <?php
 namespace App\Controller;
 
-use App\Model\Resource\DBCollection;
-use App\Model\Resource\DBEntity;
 use App\Model\Resource\Table\Product as ProductTable;
 use App\Model\Resource\Table\Review as ReviewTable;
-use App\Model\ProductCollection;
-use App\Model\ProductReviewCollection;
-use App\Model\Product;
-use App\Model\Resource\Paginator as PaginatorAdapter;
-use Zend\Paginator\Paginator as ZendPaginator;
 
 class ProductController extends Controller
 {
     public function listAction()
     {
-        $resource = new DBCollection($this->_connection,new ProductTable);
-        $paginatorAdapter = new PaginatorAdapter($resource);
-        $paginator = new ZendPaginator($paginatorAdapter);
+        $resource = $this->_di->get('ResourceCollection', ['table' => new \App\Model\Resource\Table\Product()]);
+        $paginator = $this->_di->get('Paginator', ['collection' => $resource]);
         $paginator
             ->setItemCountPerPage(2)
             ->setCurrentPageNumber(isset($_GET['p']) ? $_GET['p'] : 1);
         $pages = $paginator->getPages();
-        $_products = new ProductCollection($resource);
+        $_products = $this->_di->get('ProductCollection', ['resource' => $resource]);
         $products = $_products->getProducts();
-        $view = 'product_list';
-        require_once __DIR__ . '/../views/layout/base.phtml';
+
+        return $this->_di->get('View',[
+            'template'=>'product_list',
+            'params'=>['products'=>$products, 'pages'=>$pages]
+        ]);
     }
 
     public function viewAction()
     {
-        $product = new Product([]);
+        $resource = $this->_di->get('ResourceEntity', ['table' => new ProductTable()]);
+        $product = $this->_di->get('Product',['resource' => $resource,'data'=>[]]);
+        $product->load($_GET['id'],(new ProductTable())->getPrimaryKey());
 
-        $resource = new DBEntity($this->_connection,new ProductTable);
-        $product->load($resource,$_GET['id']);
+        $resource = $this->_di->get('ResourceCollection',['table' => new ReviewTable()]);
 
-        $resource = new DBCollection($this->_connection,new ReviewTable);
-        $reviews = new ProductReviewCollection($resource);
+        $reviews = $this->_di->get('ReviewCollection', ['resource' => $resource]);
         $reviews->filterByProduct($product);
         $_reviews = $reviews->getProductReviews();
         $average_rating = $reviews->getAverageRating();
-        $view = 'product_view';
-        require_once __DIR__ . '/../views/layout/base.phtml';
+
+        return $this->_di->get('View',[
+            'template'=>'product_view',
+            'params'=>['product'=>$product, 'rating'=>$average_rating, 'reviews'=>$_reviews]
+        ]);
     }
 }

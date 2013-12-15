@@ -10,13 +10,13 @@ class QuoteItemCollection extends EntityCollection
         $this->_resource->filterBy('customer_id', $quote->getCustomerId());
     }
 
-    public function assignProducts(Product $prototype, IResourceEntity $resource)
+    public function assignProducts(Product $prototype)
     {
         $products = [];
         foreach($this->getProducts() as $_item)
         {
             $product = clone $prototype;
-            $product->load($resource, $_item->getProductId(),'product_id');
+            $product->load($_item->getProductId(),'product_id');
             $product->setQty($_item->getQty());
             $product->setLink($_item->getId());
             $products[] = $product;

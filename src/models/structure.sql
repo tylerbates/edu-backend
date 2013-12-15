@@ -103,8 +103,9 @@ insert into reviews (name, email,text,rating,product_id) values ('asfa','sadgsad
 
 CREATE TABLE customer_products (
   link_id  INT(11) UNSIGNED  NOT NULL  AUTO_INCREMENT,
-  customer_id  INT(11) UNSIGNED  NOT NULL,
+  customer_id  INT(11) UNSIGNED  NULL,
   product_id  INT(11) UNSIGNED  NOT NULL,
+  qty INT(11) UNSIGNED  NOT NULL,
 
   PRIMARY KEY (link_id)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8  AUTO_INCREMENT=1;

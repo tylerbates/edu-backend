@@ -1,21 +1,17 @@
-<h1><a href="/">&larr;</a>Entrance</h1>
-<div class="item">
-    <?php if(!$logged_in): ?>
-    <form action = "/?page=customer_login" method="post">
-        <table>
-            <tr>
-                <td> <label for="name">Name:</label></td>
-                <td><input type="text" id="name" name="customer[name]"></td>
-            </tr>
-            <tr>
-                <td><label for="password">Passowrd:</label></td>
-                <td><input type="password" id="password" name="customer[password]"></td>
-            </tr>
-        </table>
-        <input type="submit" value="Enter">
-    </form>
-    <?php endif; if($logged_in):?>
-        You have logged in as <?php echo \App\Model\Session::getUserName();?>
-        <a href="/">Return to product list?</a>
-    <?php endif; ?>
+<div class="container">
+    <div class="jumbotron text-center">
+        <?php if(!$this->get('customer')): ?>
+        <h2>Entrance</h2>
+        <form action = "/?page=customer_login" method="post" class="navbar-form text-center">
+            <div class="form-group">
+                <input type="text" id="name" name="customer[name]" class="form-control" placeholder="Name">
+                <input type="password" id="password" name="customer[password]" class="form-control" placeholder="Password">
+                <input type="submit" value="Enter" class="btn btn-default">
+            </div>
+        </form>
+        <?php endif; if($this->get('customer')):?>
+            You have logged in as <b><?php echo \App\Model\Session::getUserName();?></b>.
+            Return to <a href="/">product list</a>?
+        <?php endif; ?>
+    </div>
 </div>
