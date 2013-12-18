@@ -29,8 +29,32 @@
     <div class="jumbotron">
         <h2><?php echo $_review->getName(); ?></h2>
         <span><p><?php echo "E-mail: " . $_review->getEmail();?></span>
-        <span><p><?php echo "Text: " . $_review->getText(); ?></span>
+        <span><p><?php echo "Text: " . htmlentities($_review->getText()); ?></span>
         <span><p><?php echo "Rating: " . $_review->getRating(); ?></span>
     </div>
     <?php endforeach; ?>
+</div>
+
+<div class="container">
+    <div class="jumbotron">
+        <h2>Your vision:</h2>
+        <form class="navbar-form navbar-center" action="/?page=productReview_add" method="post">
+            <input type="hidden" name="token" value="<?php echo $this->session()->getToken(); ?>" />
+            <input type="hidden" name="product_id" value="<?php echo $product->getId(); ?>"/>
+            <div class="form-group">
+                <input class="form-control" type="text" name="name" placeholder="Name"/>
+                <input class="form-control" type="text" name="email" placeholder="E-mail"/>
+                <textarea  class="form-control" name="text"></textarea>
+                <label class="text-info">Rating</label>
+                <select name="rating">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                </select>
+                <input type="submit" class="btn btn-default" value="Send"/>
+            </div>
+        </form>
+    </div>
 </div>

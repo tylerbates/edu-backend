@@ -55,7 +55,7 @@ class CustomerController extends Controller
 
         $info = $_POST['customer'];
         $info['password'] = md5($info['password']);
-        $customer = $this->_di->get('Customer', ['resource'=>$resource, 'data'=>$info]);
+        $customer = $this->_di->get('Customer', ['data'=>$info]);
         $customer->save($resource);
         return  $customer->getId();
     }

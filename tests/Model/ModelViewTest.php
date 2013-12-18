@@ -23,4 +23,16 @@ class ModelViewTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('<p>foo is bar</p>', $contents);
     }
+
+    public function testReturnsCurrentSession()
+    {
+        $view = new ModelView(null, null, null, null, []);
+        $session = $this->getMockBuilder('App\Model\Session')
+            ->disableOriginalConstructor()
+            ->setMethods(['__construct'])
+            ->getMock();
+
+        $view->setSession($session);
+        $this->assertSame($session,$view->session());
+    }
 }

@@ -43,7 +43,7 @@ class DiC
 
     private function _assemblePaginator()
     {
-        $this->_im->setParameters('Zend\Paginator\Paginator', ['adapter' => 'App\Model\Resource\Paginator']);
+        $this->_im->setParameters('Zend\Paginator\Paginator', ['adapter' => 'App\Model\Resource\Paginator','table' => 'App\Model\Resource\Table\Product']);
         $this->_im->addAlias('Paginator', 'Zend\Paginator\Paginator');
     }
 
@@ -83,6 +83,24 @@ class DiC
         $this->_im->addAlias('QuoteItem', 'App\Model\QuoteItem');
     }
 
+    private function _assembleAddress()
+    {
+        $this->_im->setParameters('App\Model\Address', ['table' => 'App\Model\Resource\Table\Address']);
+        $this->_im->addAlias('Address', 'App\Model\Address');
+
+        $this->_im->setParameters('App\Model\City', ['table' => 'App\Model\Resource\Table\Address']);
+        $this->_im->addAlias('City', 'App\Model\City');
+
+        $this->_im->setParameters('App\Model\CityCollection', ['table' => 'App\Model\Resource\Table\Address']);
+        $this->_im->addAlias('CityCollection', 'App\Model\CityCollection');
+
+        $this->_im->setParameters('App\Model\Region', ['table' => 'App\Model\Resource\Table\Address']);
+        $this->_im->addAlias('Region', 'App\Model\Region');
+
+        $this->_im->setParameters('App\Model\RegionCollection', ['table' => 'App\Model\Resource\Table\Address']);
+        $this->_im->addAlias('RegionCollection', 'App\Model\RegionCollection');
+    }
+
     private function _assembleView()
     {
         $this->_im->setParameters('App\Model\ModelView', [
@@ -92,5 +110,11 @@ class DiC
             'params'      => [],
         ]);
         $this->_im->addAlias('View', 'App\Model\ModelView');
+    }
+
+    private function _assembleSession()
+    {
+        $this->_im->addAlias('Session','App\Model\Session');
+        $this->_im->setParameters('App\Model\ISessionUser', ['session'=>$this->_di->get('Session')]);
     }
 }

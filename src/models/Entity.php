@@ -26,4 +26,9 @@ class Entity
     {
         $this->_data = $this->_resource->find([$pr_key=>$id]);
     }
+
+    public function save()
+    {
+        $this->_resource->save($this->_data);
+    }
 }

@@ -2,19 +2,17 @@
 namespace App\Controller;
 
 use App\Model\Resource\Table\Product as ProductTable;
-use App\Model\Resource\Table\Review as ReviewTable;
 
 class ProductController extends Controller
 {
     public function listAction()
     {
-        $resource = $this->_di->get('ResourceCollection', ['table' => new \App\Model\Resource\Table\Product()]);
-        $paginator = $this->_di->get('Paginator', ['collection' => $resource]);
+        $paginator = $this->_di->get('Paginator');
         $paginator
             ->setItemCountPerPage(2)
             ->setCurrentPageNumber(isset($_GET['p']) ? $_GET['p'] : 1);
         $pages = $paginator->getPages();
-        $_products = $this->_di->get('ProductCollection', ['resource' => $resource]);
+        $_products = $this->_di->get('ProductCollection');
         $products = $_products->getProducts();
 
         return $this->_di->get('View',[
@@ -25,13 +23,11 @@ class ProductController extends Controller
 
     public function viewAction()
     {
-        $resource = $this->_di->get('ResourceEntity', ['table' => new ProductTable()]);
-        $product = $this->_di->get('Product',['resource' => $resource,'data'=>[]]);
+        $this->_di->get('Session')->generateToken();
+        $product = $this->_di->get('Product',['data'=>[]]);
         $product->load($_GET['id'],(new ProductTable())->getPrimaryKey());
 
-        $resource = $this->_di->get('ResourceCollection',['table' => new ReviewTable()]);
-
-        $reviews = $this->_di->get('ReviewCollection', ['resource' => $resource]);
+        $reviews = $this->_di->get('ReviewCollection');
         $reviews->filterByProduct($product);
         $_reviews = $reviews->getProductReviews();
         $average_rating = $reviews->getAverageRating();

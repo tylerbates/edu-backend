@@ -65,4 +65,15 @@ class ReviewTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('Vasia', $productReview->getName());
     }
+
+    public function testSavesDataInResource()
+    {
+        $resource = $this->getMock('\App\Model\Resource\IResourceEntity');
+        $resource->expects($this->any())
+            ->method('save')
+            ->with($this->equalTo(['name' => 'Vasia']));
+
+        $review = new ProductReview(['name' => 'Vasia'], $resource);
+        $review->save();
+    }
 }
