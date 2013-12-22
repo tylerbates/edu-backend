@@ -5,7 +5,6 @@ class DBEntity implements IResourceEntity
 {
     private $_connection;
     private $_table;
-    private $_primaryKey;
 
     public function getTable()
     {
@@ -95,4 +94,11 @@ class DBEntity implements IResourceEntity
         $stmt = $this->_connection->prepare($sql);
         $stmt->execute([':id'=>$id]);
     }
+
+    public function getPrimaryKeyField()
+    {
+        return $this->_table->getPrimaryKey();
+    }
+
+
 }

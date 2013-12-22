@@ -1,20 +1,20 @@
 <?php
 namespace App\Model\Resource\Table;
 
-class QuoteItem implements ITable
+class Quote implements ITable
 {
     public function getName()
     {
-        return 'quote_products';
+        return 'quotes';
     }
 
     public function getPrimaryKey()
     {
-        return 'link_id';
+        return 'quote_id';
     }
 
     public function getSearchKey()
     {
-        return 'link_id';
+        return 'customer_id';
     }
 }

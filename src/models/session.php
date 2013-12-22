@@ -23,7 +23,7 @@ class Session
 
     public function unsetUser()
     {
-        unset($_SESSION['user']);
+        unset($_SESSION['user'],$_SESSION['quote_id']);
     }
 
     public function getUserId()
@@ -41,9 +41,14 @@ class Session
         return isset($_SESSION['user']['name']);
     }
 
-    public function getQuote()
+    public function getQuoteId()
     {
-        return $_SESSION['quote'];
+        return isset($_SESSION['quote_id']) ? $_SESSION['quote_id'] : null;
+    }
+
+    public function setQuoteId($id)
+    {
+        $_SESSION['quote_id'] = $id;
     }
 
     public function addQuoteItem($link_id)
@@ -74,5 +79,10 @@ class Session
     public function getToken()
     {
         return isset($_SESSION['token']) ? $_SESSION['token'] : null;
+    }
+
+    public function unsetQuote()
+    {
+        unset($_SESSION['quote_id']);
     }
 }

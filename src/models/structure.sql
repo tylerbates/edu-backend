@@ -100,21 +100,55 @@ insert into reviews (name, email,text,rating,product_id) values ('asfa','sadgsad
 insert into reviews (name, email,text,rating,product_id) values ('asfa','sadgsadg','sdasdgsadasd',3,1);
 
 
+CREATE TABLE addresses (
+  address_id  INT(11) UNSIGNED  NOT NULL  AUTO_INCREMENT,
+  region  VARCHAR(255) COLLATE utf8_bin NULL,
+  city  VARCHAR(255) COLLATE utf8_bin NULL,
+  mail_index  INT(11) UNSIGNED  NULL,
+  street  VARCHAR(255) COLLATE utf8_bin NULL,
+  flat  VARCHAR(255) COLLATE utf8_bin NULL,
 
-CREATE TABLE customer_products (
-  link_id  INT(11) UNSIGNED  NOT NULL  AUTO_INCREMENT,
+  PRIMARY KEY (address_id)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8  AUTO_INCREMENT=1;
+
+
+
+CREATE TABLE quotes (
+  quote_id  INT(11) UNSIGNED  NOT NULL  AUTO_INCREMENT,
   customer_id  INT(11) UNSIGNED  NULL,
+  address_id  INT(11) UNSIGNED  NOT NULL,
+
+  PRIMARY KEY (quote_id)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8  AUTO_INCREMENT=1;
+
+ALTER TABLE quotes ADD CONSTRAINT FOREIGN KEY (customer_id) REFERENCES customers(customer_id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE quotes ADD CONSTRAINT FOREIGN KEY (address_id) REFERENCES addresses(address_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+CREATE TABLE quote_products (
+  link_id  INT(11) UNSIGNED  NOT NULL  AUTO_INCREMENT,
+  quote_id  INT(11) UNSIGNED  NOT NULL,
   product_id  INT(11) UNSIGNED  NOT NULL,
   qty INT(11) UNSIGNED  NOT NULL,
 
   PRIMARY KEY (link_id)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8  AUTO_INCREMENT=1;
 
-ALTER TABLE customer_products ADD CONSTRAINT FOREIGN KEY (product_id) REFERENCES products(product_id) ON UPDATE CASCADE ON DELETE CASCADE;
-ALTER TABLE customer_products ADD CONSTRAINT FOREIGN KEY (customer_id) REFERENCES customers(customer_id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE quote_products ADD CONSTRAINT FOREIGN KEY (product_id) REFERENCES products(product_id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE quote_products ADD CONSTRAINT FOREIGN KEY (quote_id) REFERENCES quotes(quote_id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 SELECT p.*  FROM products as p
   INNER JOIN customer_products as cp on p.product_id = cp.product_id;
 
-alter table customer_products add column qty INT(11) UNSIGNED NOT NULL;
+CREATE TABLE shipping_rate (
+  rate_id  INT(11) UNSIGNED  NOT NULL  AUTO_INCREMENT,
+  region  VARCHAR(255) COLLATE utf8_bin NULL,
+  city  VARCHAR(255) COLLATE utf8_bin NULL,
+  price DECIMAL(10,2) NULL,
+
+  PRIMARY KEY (rate_id)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8  AUTO_INCREMENT=1;
+
+insert into shipping_rate (region,city,price) values ('Rostov obl.','Rostov',100),('Rostov obl.','Taganrog',200);
+
+alter table quotes add  column shipping_code varchar(255) COLLATE utf8_bin NULL;

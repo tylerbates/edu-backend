@@ -23,6 +23,8 @@ class DiC
                 $_method->invoke($this);
             }
         }
+        $this->_im->setShared('ResourceEntity', false);
+        $this->_im->setShared('ResourceCollection', false);
     }
 
     private function _assembleDbConnection()
@@ -38,6 +40,7 @@ class DiC
         $this->_im->addTypePreference('App\Model\Resource\IResourceEntity', 'App\Model\Resource\DBEntity');
         $this->_im->addAlias('ResourceCollection', 'App\Model\Resource\DBCollection');
         $this->_im->addAlias('ResourceEntity', 'App\Model\Resource\DBEntity');
+
 
     }
 
@@ -73,14 +76,14 @@ class DiC
 
     private function _assembleQuote()
     {
-        $this->_im->setParameters('App\Model\QuoteItemCollection', ['table' => 'App\Model\Resource\Table\QuoteItem']);
-        $this->_im->addAlias('QuoteCollection', 'App\Model\QuoteItemCollection');
-
-        $this->_im->setParameters('App\Model\Quote', ['table' => 'App\Model\Resource\Table\QuoteItem']);
-        $this->_im->addAlias('Quote', 'App\Model\Quote');
-
         $this->_im->setParameters('App\Model\QuoteItem', ['table' => 'App\Model\Resource\Table\QuoteItem']);
         $this->_im->addAlias('QuoteItem', 'App\Model\QuoteItem');
+
+        $this->_im->setParameters('App\Model\QuoteItemCollection', ['table' => 'App\Model\Resource\Table\QuoteItem']);
+        $this->_im->addAlias('QuoteItemCollection', 'App\Model\QuoteItemCollection');
+
+        $this->_im->setParameters('App\Model\Quote', ['table' => 'App\Model\Resource\Table\Quote']);
+        $this->_im->addAlias('Quote', 'App\Model\Quote');
     }
 
     private function _assembleAddress()
@@ -116,5 +119,10 @@ class DiC
     {
         $this->_im->addAlias('Session','App\Model\Session');
         $this->_im->setParameters('App\Model\ISessionUser', ['session'=>$this->_di->get('Session')]);
+    }
+
+    private function _assembleFactory()
+    {
+        $this->_im->addAlias('Factory','App\Model\Shipping\Factory');
     }
 }

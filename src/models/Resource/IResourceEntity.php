@@ -10,4 +10,6 @@ interface IResourceEntity
     public function delete($id);
 
     public function getTable();
+
+    public function getPrimaryKeyField();
 }

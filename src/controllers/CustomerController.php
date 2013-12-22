@@ -4,11 +4,11 @@ namespace App\Controller;
 use App\Model\Resource\Table\Customer as CustomerTable;
 use App\Model\Session;
 
-class CustomerController extends Controller
+class CustomerController extends SalesController
 {
     public function  exitAction()
     {
-        $session = new Session();
+        $session = $this->_di->get('Session');
         $session->unsetUser();
         header('Location: /');
     }
@@ -27,8 +27,9 @@ class CustomerController extends Controller
         }
         if($logged_in)
         {
-            $session = new Session();
+            $session = $this->_di->get('Session');
             $session->setUser(['customer_id'=>(int) $logged_in[0]['customer_id'],'name'=>$logged_in[0]['name']]);
+            $this->_initQuote();
         }
         return $this->_di->get('View',[
             'template'=>'customer_login',

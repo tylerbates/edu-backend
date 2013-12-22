@@ -29,6 +29,11 @@ class Entity
 
     public function save()
     {
-        $this->_resource->save($this->_data);
+        $this->_data[$this->_resource->getPrimaryKeyField()] = $this->_resource->save($this->_data);
+    }
+
+    public function getId()
+    {
+        return $this->_getData($this->_resource->getPrimaryKeyField());
     }
 }

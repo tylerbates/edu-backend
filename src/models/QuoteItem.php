@@ -1,43 +1,56 @@
 <?php
 namespace App\Model;
 
-use App\Model\Resource\IResourceEntity;
-
 class QuoteItem extends Entity
 {
-    public function addQty($qty)
+    public function assignToProduct(Product $product)
     {
-        $this->_data['qty'] = $qty;
+        $this->_data['product_id'] = (int)$product->getId();
     }
 
-    public function getQty()
+    public function assignToQuote(Quote $quote)
     {
-        return $this->_getData('qty');
+        $this->_data['quote_id'] = (int)$quote->getId();
+    }
+
+    public function addQty($qty)
+    {
+        if(isset($this->_data['qty']))
+        {
+            $this->_data['qty'] = $this->_data['qty'] + (int)$qty;
+        }else
+        {
+            $this->_data['qty'] = (int)$qty;
+        }
     }
 
     public function updateQty($qty)
     {
-        $this->_data['qty'] = $qty;
-    }
-
-    public function save(IResourceEntity $resource)
-    {
-        $id = $resource->save($this->_data);
-        $this->_data['link_id'] = $id;
-    }
-
-    public function delete(IResourceEntity $resource)
-    {
-        $resource->delete($this->_data['link_id']);
-    }
-
-    public function getId()
-    {
-        return $this->_getData('link_id');
+        $this->_data['qty'] = (int)$qty;
     }
 
     public function getProductId()
     {
-        return $this->_getData('product_id');
+        return $this->_data['product_id'];
+    }
+
+    public function getQty()
+    {
+        return $this->_data['qty'];
+    }
+
+    public function getLinkId()
+    {
+        return $this->_data['link_id'];
+    }
+
+    public function setLink($link_id)
+    {
+        $this->_data['link_id'] = $link_id;
+    }
+
+    public function delete()
+    {
+        $this->_resource->delete($this->_data['link_id']);
     }
 }

@@ -3,46 +3,58 @@ namespace App\Model;
 use App\Model\Session;
 use App\Model\Product;
 use App\Model\Resource\IResourceEntity;
+use App\Model\Shipping\Factory;
 
-class Quote
+class Quote extends Entity
 {
-    private $_data = array();
-    private $_resource;
-
-    public function __construct(IResourceEntity $resource)
-    {
-        $this->_resource = $resource;
-    }
-
-
-    public function loadByCustomer($customer_id)
-    {
-        $this->_data = $this->_resource->find(['customer_id'=>$customer_id]);
-    }
-
     public function loadBySession(Session $session)
     {
-        foreach ($session->getQuote() as $link_id)
+        if ($quoteId = $session->getQuoteId())
         {
-            $this->_data = $this->_resource->find(['link_id'=>$link_id]);
+            $this->load($session->getQuoteId(),'quote_id');
+        } else
+        {
+            $this->save();
+            $session->setQuoteId($this->getId());
         }
     }
 
-    public function getItemForProduct(Product $product, $customer_id, $link_id)
+    public function loadByCustomer(Session $session)
     {
-        if(!$customer_id) $customer_id = 0;
-        return $quoteItem = new QuoteItem(['customer_id'=>$customer_id,'product_id'=>(int) $product->getId(), 'link_id'=>$link_id]);
+        if ($this->_resource->find(['customer_id'=>$session->getUserId()]))
+        {
+            $this->load((int) $session->getUserId(),'customer_id');
+            $session->setQuoteId($this->getId());
+        } else
+        {
+            $this->_data['customer_id'] = $session->getUserId();
+            $this->save();
+            $session->setQuoteId($this->getId());
+        }
     }
 
-    public function getProducts()
+    public function getItemForProduct(QuoteItem $prototype, Product $product, $link_id = null)
     {
-        return array_map(function($item){
-            return new QuoteItem($item);
-        },$this->_data);
+        $prototype->assignToQuote($this);
+        $prototype->assignToProduct($product);
+        $prototype->setLink($link_id);
+        return $prototype;
     }
 
-    public function getCustomerId()
+    public function setAddress(Address $address)
     {
-        return $this->_data['customer_id'];
+        $this->_data['address_id'] = $address->getId();
+        $this->save();
+    }
+
+    public function getAddress()
+    {
+        return $this->_data['address_id'];
+    }
+
+    public function setShippingCode($code)
+    {
+        $this->_data['shipping_code'] = $code;
+        $this->save();
     }
 }
