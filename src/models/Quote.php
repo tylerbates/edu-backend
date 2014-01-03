@@ -75,4 +75,14 @@ class Quote extends Entity
         $this->_data['address_id'] = $this->_address->getId();
         $this->save();
     }
+
+    public function getShippingCode()
+    {
+        return $this->_data['shipping_code'];
+    }
+
+    public function setShippingMethod($code)
+    {
+        $this->_data['shipping_code'] = $code;
+    }
 }
