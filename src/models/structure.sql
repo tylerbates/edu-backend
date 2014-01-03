@@ -116,7 +116,8 @@ CREATE TABLE addresses (
 CREATE TABLE quotes (
   quote_id  INT(11) UNSIGNED  NOT NULL  AUTO_INCREMENT,
   customer_id  INT(11) UNSIGNED  NULL,
-  address_id  INT(11) UNSIGNED  NOT NULL,
+  address_id  INT(11) UNSIGNED NULL,
+  shipping_code varchar(255) COLLATE utf8_bin NULL,
 
   PRIMARY KEY (quote_id)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8  AUTO_INCREMENT=1;
@@ -142,13 +143,30 @@ SELECT p.*  FROM products as p
 
 CREATE TABLE shipping_rate (
   rate_id  INT(11) UNSIGNED  NOT NULL  AUTO_INCREMENT,
-  region  VARCHAR(255) COLLATE utf8_bin NULL,
   city  VARCHAR(255) COLLATE utf8_bin NULL,
   price DECIMAL(10,2) NULL,
 
   PRIMARY KEY (rate_id)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8  AUTO_INCREMENT=1;
 
-insert into shipping_rate (region,city,price) values ('Rostov obl.','Rostov',100),('Rostov obl.','Taganrog',200);
+insert into shipping_rate (city,price) values ('Rostov',100),('Taganrog',200);
 
 alter table quotes add  column shipping_code varchar(255) COLLATE utf8_bin NULL;
+
+CREATE TABLE cities (
+  city_id  INT(11) UNSIGNED  NOT NULL  AUTO_INCREMENT,
+  name  VARCHAR(255) COLLATE utf8_bin NULL,
+
+  PRIMARY KEY (city_id)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8  AUTO_INCREMENT=1;
+
+CREATE TABLE regions (
+  region_id  INT(11) UNSIGNED  NOT NULL  AUTO_INCREMENT,
+  name  VARCHAR(255) COLLATE utf8_bin NULL,
+
+  PRIMARY KEY (region_id)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8  AUTO_INCREMENT=1;
+
+INSERT INTO cities (name) VALUES ('Rostov'),('Taganrog'),('Moskow');
+
+INSERT INTO regions (name) VALUES ('Rostovskaya obl.'),('Moskovskaya obl.');

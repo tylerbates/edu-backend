@@ -5,6 +5,6 @@ class Region extends Entity
 {
     public function getRegion()
     {
-        return $this->_getData('region');
+        return $this->_getData('name');
     }
 }

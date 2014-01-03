@@ -35,6 +35,7 @@
                     </form>
                     <form method="post" action="/?page=quote_delete" class="navbar-form navbar-right">
                         <input type="hidden" id="link_id" name="link_id" value="<?php echo $_product->getLink(); ?>">
+                        <input type="hidden" id="link_id" name="product_id" value="<?php echo $_product->getId(); ?>">
                         <input type="submit" class="btn btn-default" value="delete">
                     </form>
                 </div>

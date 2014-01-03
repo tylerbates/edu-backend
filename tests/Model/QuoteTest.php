@@ -4,50 +4,86 @@ namespace Test\Model;
 use App\Model\Product;
 use App\Model\Quote;
 use App\Model\QuoteItem;
+use App\Model\QuoteItemCollection;
 
 class QuoteTest extends \PHPUnit_Framework_TestCase
 {
+    public function testLoadsQuoteBySession()
+    {
+        $resource = $this->getMock('App\Model\Resource\IResourceEntity');
+
+        $resource->expects($this->any())
+            ->method('find')
+            ->will($this->returnValue(['quote_id'=>1,'customer_id'=>1]));
+
+        $session = $this->getMockBuilder('App\Model\Session')
+            ->disableOriginalConstructor()
+            ->setMethods(['getQuoteId'])
+            ->getMock();
+        $session->expects($this->any())
+            ->method('getQuoteId')
+            ->will($this->returnValue(1));
+
+        $quote = new Quote([],$resource);
+        $quote->loadBySession($session);
+
+        $this->assertEquals(1,$quote->getData('quote_id'));
+    }
+
     public function testLoadsQuoteByCustomer()
     {
         $resource = $this->getMock('App\Model\Resource\IResourceEntity');
 
         $resource->expects($this->any())
-                 ->method('find')
-                 ->will($this->returnValue([['link_id'=>1,'customer_id'=>1,'product_id'=>1,'qty'=>3]]));
-
-        $quote = new Quote($resource);
-        $quote->loadByCustomer(1);
-
-        $this->assertEquals([new QuoteItem(['link_id'=>1,'customer_id'=>1,'product_id'=>1,'qty'=>3])],$quote->getProducts());
-    }
-
-    public function testLoadsQuoteBySession()
-    {
-        $entity_resource = $this->getMock('App\Model\Resource\IResourceEntity');
-
-        $entity_resource->expects($this->any())
             ->method('find')
-            ->will($this->returnValue([['link_id'=>1,'customer_id'=>1,'product_id'=>1,'qty'=>3]]));
+            ->will($this->returnValue(['quote_id'=>1,'customer_id'=>1]));
 
-        $session_resource = $this->getMock('App\Model\Session');
-        $session_resource->expects($this->any())
-                 ->method('getQuote')
-                 ->will($this->returnValue([[1]]));
+        $session = $this->getMockBuilder('App\Model\Session')
+            ->disableOriginalConstructor()
+            ->setMethods(['getUserId'])
+            ->getMock();
+        $session->expects($this->any())
+            ->method('getUserId')
+            ->will($this->returnValue(1));
 
-        $quote = new Quote($entity_resource);
-        $quote->loadBySession($session_resource);
+        $quote = new Quote([],$resource);
+        $quote->loadByCustomer($session);
 
-        $this->assertEquals([new QuoteItem(['link_id'=>1,'customer_id'=>1,'product_id'=>1,'qty'=>3])],$quote->getProducts());
+        $this->assertEquals(1,$quote->getData('quote_id'));
     }
 
-    public function testReturnsQuoteItemForProduct()
+    public function testReturnsAssignedAddress()
     {
-        $product = new Product(['product_id'=>1,'name'=>'foo']);
-        $entity_resource = $this->getMock('App\Model\Resource\IResourceEntity');
-        $quote = new Quote($entity_resource);
-        $quoteItem = $quote->getItemForProduct($product,1,2);
+        $address = $this->getMockBuilder('App\Model\Address',['load'])
+            ->disableOriginalConstructor()
+            ->getMock();
+        $address->expects($this->once())
+            ->method('load')
+            ->with($this->equalTo(42));
 
-        $this->assertEquals(1,$quoteItem->getData('product_id'));
+        $quote = new Quote(['address_id'=>42],null,null,$address);
+        $this->assertSame($address,$quote->getAddress());
     }
 
+    public function testCreatesNewAddressIfNotAssigned()
+    {
+        $address = $this->getMockBuilder('App\Model\Address',['getId','save'])
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $address->expects($this->once())
+            ->method('getId')
+            ->will($this->returnValue(42));
+        $address->expects($this->once())
+            ->method('save');
+
+        $quoteResource = $this->getMock('App\Model\Resource\IResourceEntity');
+        $quoteResource->expects($this->once())
+            ->method('save')
+            ->with($this->equalTo(['address_id'=>42]));
+
+        $quote = new Quote([],$quoteResource,null,$address);
+
+        $this->assertSame($address,$quote->getAddress());
+    }
 }

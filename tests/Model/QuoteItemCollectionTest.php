@@ -2,30 +2,28 @@
 namespace Test\Model;
 use App\Model\Product;
 use App\Model\Quote;
+use App\Model\QuoteItem;
 use App\Model\QuoteItemCollection;
 
 class QuoteItemCollectionTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-    * @dataProvider getCustomerIds
-    */
-    public function testFiltersCollectionByQuote($customerId)
+    public function testFiltersCollectionByQuote()
     {
-        $cid = $customerId;
-        $quote = new Quote(['customer_id' => $cid]);
-        $resource = $this->getMock('\App\Model\Resource\IResourceCollection');
-        $resource->expects($this->any())
-            ->method('filterBy')
-            ->with($this->equalTo('customer_id'), $this->equalTo($cid));
+        $items = $this->getMock('App\Model\Resource\IResourceCollection');
+        $items->expects($this->once())->method('filterBy')
+            ->with($this->equalTo('quote_id'), $this->equalTo(42));
+        $items->expects($this->any())
+            ->method('fetch')
+            ->will($this->returnValue([]));
 
-        $collection = new QuoteItemCollection($resource);
+        $quote = $this->getMock('App\Model\Quote', ['getId']);
+        $quote->expects($this->any())->method('getId')
+            ->will($this->returnValue(42));
 
-        $collection->filterByQuote($quote);
-    }
 
-    public function getCustomerIds()
-    {
-        return 2;
+
+        $quoteItems = new QuoteItemCollection($items, new QuoteItem([]));
+        $quoteItems->filterByQuote($quote);
     }
 
     public function testAssignsProducts()
@@ -35,7 +33,7 @@ class QuoteItemCollectionTest extends \PHPUnit_Framework_TestCase
             ->method('fetch')
             ->will($this->returnValue(
                 [
-                    ['product_id' => 1]
+                    ['product_id' => 1,'qty'=>1, 'link_id'=>1]
                 ]
             ));
         $productResource = $this->getMock('\App\Model\Resource\IResourceEntity');
@@ -47,7 +45,7 @@ class QuoteItemCollectionTest extends \PHPUnit_Framework_TestCase
                 ]
             ));
 
-        $qicollection = new QuoteItemCollection($resource);
+        $qicollection = new QuoteItemCollection($resource, new QuoteItem([]));
         $qicollection->assignProducts(new Product([], $productResource),$productResource);
     }
 }

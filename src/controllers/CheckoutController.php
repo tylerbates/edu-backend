@@ -8,33 +8,26 @@ class CheckoutController extends SalesController
 {
     public function addressAction()
     {
-        if(isset($_POST['address']))
+        $_regions = $this->_di->get('RegionCollection');
+        $regions = $_regions->getRegions();
+        $_cities = $this->_di->get('CityCollection');
+        $cities = $_cities->getCities();
+        $quote = $this->_initQuote();
+        $address = $quote->getAddress();
+        if (isset($_POST['address']))
         {
-            $quote = $this->_initQuote();
-            $resource = $this->_di->get('ResourceEntity',['table'=>new AddressTable()]);
-            $address = $this->_di->get('Address',['resource'=>$resource,'data'=>$_POST['address']]);
+            $address->setData($_POST['address']);
             $address->save();
-            $quote->setAddress($address);
             $this->_redirect('checkout_shipping');
-        }else
-        {
-            return $this->_di->get('View',['template'=>'checkout_address']);
         }
+        return $this->_di->get('View',[
+            'template'=>'checkout_address',
+            'params'=>['regions'=>$regions,'cities'=>$cities, 'address'=>$address]
+        ]);
     }
 
     public function shippingAction()
     {
-        if(isset($_POST['code']))
-        {
-            $quote = $this->_initQuote();
-            $resource = $this->_di->get('ResourceEntity',['table'=>new AddressTable()]);
-            $address = $this->_di->get('Address',['resource'=>$resource,'data'=>[]]);
-            $address->load($quote->getAddress(), 'address_id');
-            $factory = new Factory($address);
-            $quote->setShippingCode($_POST['code']);
-        }
-
-
-        return $this->_di->get('View',['template'=>'checkout_shipping']);
+        echo 'ololo';
     }
 }

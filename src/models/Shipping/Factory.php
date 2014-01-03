@@ -2,13 +2,16 @@
 namespace App\Model\Shipping;
 
 use App\Model\Address;
+use App\Model\Resource\IResourceEntity;
 
 class Factory
 {
     private $_address;
+    private $_resource;
 
-    public function __construct(Address $address)
+    public function __construct(IResourceEntity $resource = null, Address $address)
     {
+        $this->_resource = $resource;
         $this->_address = $address;
     }
 
@@ -16,7 +19,7 @@ class Factory
     {
         return [
             new Fixed($this->_address),
-            new TableRate($this->_address)
+            new TableRate($this->_resource,$this->_address)
         ];
     }
 }

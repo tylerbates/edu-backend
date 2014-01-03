@@ -11,7 +11,6 @@ class QuoteController extends SalesController
         $quoteItem = $this->_initQuoteItem();
         $quoteItem->addQty((int) $_POST['qty']);
         $quoteItem->save();
-
         $this->_redirect('product_list');
     }
 
@@ -26,7 +25,6 @@ class QuoteController extends SalesController
     public function deleteAction()
     {
         $quoteItem = $this->_initQuoteItem();
-        //var_dump($quoteItem);die;
         $quoteItem->delete();
         $this->_redirect('quote_list');
     }
@@ -34,13 +32,8 @@ class QuoteController extends SalesController
     public function listAction()
     {
         $quote = $this->_initQuote();
-        $quoteItems = $this->_di->get('QuoteItemCollection');
-        $quoteItems->filterByQuote($quote);
-
-        $pr_resource = $this->_di->get('ResourceEntity',['table'=>new ProductTable()]);
-        $prototype = $this->_di->get('Product',['resource'=>$pr_resource,'data'=>[]]);
-
-        $products = $quoteItems->assignProducts($prototype);
+        $prototype = $this->_di->get('Product',['data'=>[]]);
+        $products = $quote->getItems()->assignProducts($prototype);
         return $this->_di->get('View',[
             'template'=>'quote_list',
             'params'=>['products'=>$products]
@@ -50,12 +43,11 @@ class QuoteController extends SalesController
     private function _initQuoteItem()
     {
         $quote = $this->_initQuote();
-        $pr_resource = $this->_di->get('ResourceEntity',['table'=>new ProductTable()]);
-        $product = $this->_di->get('Product',['resource'=>$pr_resource,'data'=>[]]);
+
+        $product = $this->_di->get('Product',['data'=>[]]);
         $product->load($_POST['product_id'],'product_id');
-        $qi_resource = $this->_di->get('ResourceEntity',['table'=>new QuoteItemTable()]);
-        $prototype = $this->_di->get('QuoteItem',['resource'=>$qi_resource,'data'=>[]]);
-        $item = $quote->getItemForProduct($prototype, $product,$_POST['link_id']);
+
+        $item = $quote->getItems()->forProduct($product,$quote);
         return $item;
     }
 }

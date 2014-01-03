@@ -5,6 +5,7 @@ class Fixed implements IMethod
 {
     private $_price = 42;
     private $_code = 'fixed';
+    private $_label = 'fixed price';
 
     public function getCode()
     {
@@ -14,5 +15,10 @@ class Fixed implements IMethod
     public function getPrice()
     {
         return $this->_price;
+    }
+
+    public function getLabel()
+    {
+        return $this->_label;
     }
 }

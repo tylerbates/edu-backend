@@ -7,9 +7,23 @@ use App\Model\Shipping\Factory;
 
 class Quote extends Entity
 {
+    private $_items;
+    private $_address;
+
+    public function __construct(
+        array $data = [],
+        Resource\IResourceEntity $resource = null,
+        QuoteItemCollection $items = null,
+        Address $address = null
+    ) {
+        $this->_items =  $items;
+        $this->_address = $address;
+        parent::__construct($data, $resource);
+    }
+
     public function loadBySession(Session $session)
     {
-        if ($quoteId = $session->getQuoteId())
+        if($quoteId = $session->getQuoteId())
         {
             $this->load($session->getQuoteId(),'quote_id');
         } else
@@ -33,28 +47,32 @@ class Quote extends Entity
         }
     }
 
-    public function getItemForProduct(QuoteItem $prototype, Product $product, $link_id = null)
+    public function setItems()
     {
-        $prototype->assignToQuote($this);
-        $prototype->assignToProduct($product);
-        $prototype->setLink($link_id);
-        return $prototype;
+        $this->_items->filterByQuote($this);
     }
 
-    public function setAddress(Address $address)
+    public function getItems()
     {
-        $this->_data['address_id'] = $address->getId();
-        $this->save();
+        return $this->_items->getItems();
     }
 
     public function getAddress()
     {
-        return $this->_data['address_id'];
+        if($addressId = $this->getData('address_id'))
+        {
+            $this->_address->load($this->getData('address_id'),'address_id');
+        } else
+        {
+            $this->_address->save();
+            $this->_assignAddress();
+        }
+        return $this->_address;
     }
 
-    public function setShippingCode($code)
+    private function _assignAddress()
     {
-        $this->_data['shipping_code'] = $code;
+        $this->_data['address_id'] = $this->_address->getId();
         $this->save();
     }
 }

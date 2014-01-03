@@ -29,7 +29,7 @@ class QuoteItemTest extends \PHPUnit_Framework_TestCase
         $resource->expects($this->any())
             ->method('save')
             ->with($this->equalTo(['product_id'=>3,'qty'=>1]));
-        $quoteItem = new QuoteItem(['product_id'=>3,'qty'=>1]);
+        $quoteItem = new QuoteItem(['product_id'=>3,'qty'=>1],$resource);
 
         $quoteItem->save($resource);
     }
@@ -43,7 +43,7 @@ class QuoteItemTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo(['product_id'=>3,'qty'=>1]))
             ->will($this->returnValue(24));
 
-        $quoteItem = new QuoteItem(['product_id'=>3,'qty'=>1]);
+        $quoteItem = new QuoteItem(['product_id'=>3,'qty'=>1],$resource);
         $quoteItem->save($resource);
 
         $this->assertEquals(24,$quoteItem->getId());

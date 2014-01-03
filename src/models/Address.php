@@ -27,4 +27,11 @@ class Address extends Entity
     {
         return $this->_getData('flat');
     }
+
+    public function setData($data)
+    {
+        isset($this->_data['address_id']) ? $id = $this->_data['address_id'] : $id = 0;
+        $this->_data = $data;
+        $this->_data['address_id'] = $id;
+    }
 }

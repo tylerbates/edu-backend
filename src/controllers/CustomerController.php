@@ -58,6 +58,10 @@ class CustomerController extends SalesController
         $info['password'] = md5($info['password']);
         $customer = $this->_di->get('Customer', ['data'=>$info]);
         $customer->save($resource);
+        $session = $this->_di->get('Session');
+        $session->setUser(['customer_id' => (int) $customer->getId()]);
+        $this->_initQuote();
+        $session->unsetUser();
         return  $customer->getId();
     }
 }
