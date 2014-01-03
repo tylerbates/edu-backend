@@ -28,6 +28,22 @@ class CheckoutController extends SalesController
 
     public function shippingAction()
     {
-        echo 'ololo';
+        $quote = $this->_initQuote();
+        $methods = $this->_di->get('ShippingFactory', ['address'=>$quote->getAddress()])->getMethods();
+        $shipping_code = $quote->getShippingCode();
+        if(isset($_POST['shipping']))
+        {
+            $quote->setShippingMethod($_POST['shipping']);
+            $quote->save();
+            $this->_redirect('checkout_shipping');
+        }
+        return $this->_di->get('View',[
+            'template'=>'checkout_shipping',
+            'params'=>[
+                'methods'=>$methods,
+                'shipping_code'=>$shipping_code,
+                'address'=>$quote->getAddress()->getCity()
+            ]
+        ]);
     }
 }

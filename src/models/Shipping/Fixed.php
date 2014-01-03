@@ -5,7 +5,7 @@ class Fixed implements IMethod
 {
     private $_price = 42;
     private $_code = 'fixed';
-    private $_label = 'fixed price';
+    private $_label = 'fixed price: ';
 
     public function getCode()
     {

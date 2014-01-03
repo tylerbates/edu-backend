@@ -1,50 +1,18 @@
 <div class="container">
     <div class="jumbotron">
-        <form action = "/?page=checkout_address" method="post" class="navbar-form">
+        <form action = "/?page=checkout_shipping" method="post" class="navbar-form">
             <div class="form-group">
-                <select id="region" name="address[region]" class="form-control">
-                    <?php foreach($this->get('regions') as $region): ?>
-                        <option
-                            <?php if($this->get('address')->getRegion() == $region->getRegion()): ?>
+                <select class="form-control" id="shipping" name="shipping">
+                    <?php foreach($this->get('methods') as $method): ?>
+                        <option value=<?php echo $method->getCode(); ?>
+                            <?php if($this->get('shipping_code') == $method->getCode()): ?>
                                 selected
                             <?php endif; ?>
                             >
-                            <?php echo $region->getRegion(); ?>
+                            <?php echo $method->getLabel() . $method->getPrice() . '$'; ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
-                <select id="city" name="address[city]" class="form-control">
-                    <?php foreach($this->get('cities') as $city): ?>
-                        <option
-                            <?php if($this->get('address')->getCity() == $city->getCity()): ?>
-                                selected
-                            <?php endif; ?>
-                            >
-                            <?php echo $city->getCity(); ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-                <input type="text" id="mail_index" name="address[mail_index]"
-                       <?php if($mail_index = $this->get('address')->getMailIndex()): ?>
-                           value=<?php echo $mail_index; ?>
-                       <?php else: ?>
-                           placeholder="MailIndex"
-                       <?php endif; ?>
-                       class="form-control">
-                <input type="text" id="street" name="address[street]"
-                       <?php if($street = $this->get('address')->getStreet()): ?>
-                           value=<?php echo $street; ?>
-                       <?php else: ?>
-                           placeholder="Street"
-                       <?php endif; ?>
-                       class="form-control">
-                <input type="text" id="flat" name="address[flat]"
-                    <?php if($flat = $this->get('address')->getFlat()): ?>
-                        value=<?php echo $flat; ?>
-                    <?php else: ?>
-                        placeholder="Flat"
-                    <?php endif; ?>
-                       class="form-control">
                 <input type="submit" value="Next" class="btn btn-default">
             </div>
         </form>

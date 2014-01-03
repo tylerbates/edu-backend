@@ -130,6 +130,6 @@ class DiC
     private function _assembleFactory()
     {
         $this->_im->setParameters('App\Model\Shipping\Factory',['table'=>'App\Model\Resource\Table\ShippingRate']);
-        $this->_im->addAlias('Factory','App\Model\Shipping\Factory');
+        $this->_im->addAlias('ShippingFactory','App\Model\Shipping\Factory');
     }
 }

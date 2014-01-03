@@ -31,7 +31,7 @@ class TableRate implements IMethod
 
     public function getLabel()
     {
-        return $this->_label;
+        return $this->_label . ' (' . $this->_address->getCity() . '): ';
     }
 
     private function _assignPrice()
