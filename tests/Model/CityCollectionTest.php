@@ -12,7 +12,7 @@ class CityCollectionTest extends \PHPUnit_Framework_TestCase
             ->method('fetch')
             ->will($this->returnValue(
                 [
-                    ['city'=>'Rostov']
+                    ['name'=>'Rostov']
                 ]
             ));
 
@@ -28,8 +28,8 @@ class CityCollectionTest extends \PHPUnit_Framework_TestCase
             ->method('fetch')
             ->will($this->returnValue(
                 [
-                    ['city' => 'Rostov'],
-                    ['city' => 'Vologda']
+                    ['name' => 'Rostov'],
+                    ['name' => 'Vologda']
                 ]
             ));
 

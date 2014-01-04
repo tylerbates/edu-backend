@@ -1,9 +1,6 @@
 <?php
 namespace App\Controller;
 
-use App\Model\Resource\Table\Address as AddressTable;
-use App\Model\Shipping\Factory;
-
 class CheckoutController extends SalesController
 {
     public function addressAction()
@@ -22,7 +19,11 @@ class CheckoutController extends SalesController
         }
         return $this->_di->get('View',[
             'template'=>'checkout_address',
-            'params'=>['regions'=>$regions,'cities'=>$cities, 'address'=>$address]
+            'params'=>[
+                'regions'=>$regions,
+                'cities'=>$cities,
+                'address'=>$address
+            ]
         ]);
     }
 
@@ -35,7 +36,7 @@ class CheckoutController extends SalesController
         {
             $quote->setShippingMethod($_POST['shipping']);
             $quote->save();
-            $this->_redirect('checkout_shipping');
+            $this->_redirect('checkout_payment');
         }
         return $this->_di->get('View',[
             'template'=>'checkout_shipping',
@@ -45,5 +46,32 @@ class CheckoutController extends SalesController
                 'address'=>$quote->getAddress()->getCity()
             ]
         ]);
+    }
+
+    public function paymentAction()
+    {
+        $quote = $this->_initQuote();
+        $methods = $this->_di->get('PaymentFactory',['address'=>$quote->getAddress()])
+            ->getMethods()
+            ->avaliable();
+        $payment_code = $quote->getPaymentCode();
+        if(isset($_POST['payment']))
+        {
+            $quote->setPaymentMethod($_POST['payment']);
+            $quote->save();
+            $this->_redirect('checkout_payment');
+        }
+        return $this->_di->get('View',[
+            'template'=>'checkout_payment',
+            'params'=>[
+                'methods'=>$methods,
+                'payment_code'=>$payment_code
+            ]
+        ]);
+    }
+
+    public function orderAction()
+    {
+
     }
 }

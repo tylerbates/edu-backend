@@ -18,7 +18,7 @@ class TableRateTest extends \PHPUnit_Framework_TestCase
     {
         $resource = $this->getMock('App\Model\Resource\IResourceEntity');
         $table_rate = new TableRate($resource, new Address([]));
-        $this->assertEquals('price depends on address',$table_rate->getLabel());
+        $this->assertEquals('price depends on address (): ',$table_rate->getLabel());
     }
 
     public function testReturnsPrice()

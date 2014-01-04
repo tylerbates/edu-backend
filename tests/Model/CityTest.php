@@ -11,7 +11,7 @@ class CityTest extends \PHPUnit_Framework_TestCase
         $resource->expects($this->any())
             ->method('find')
             ->with($this->equalTo(['id'=>42]))
-            ->will($this->returnValue(['city' => 'Rostov']));
+            ->will($this->returnValue(['name' => 'Rostov']));
 
         $city = new City([], $resource);
         $city->load(42, 'id');

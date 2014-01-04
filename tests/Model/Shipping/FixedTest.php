@@ -20,6 +20,6 @@ class FixedTest extends \PHPUnit_Framework_TestCase
     public function testReturnsLabel()
     {
         $fixed = new Fixed();
-        $this->assertEquals('fixed price',$fixed->getLabel());
+        $this->assertEquals('fixed price: ',$fixed->getLabel());
     }
 }

@@ -1,17 +1,17 @@
 <div class="container">
     <div class="jumbotron">
-        <h3><a href="/?page=checkout_address">&larrhk;</a>
-        Shipping step:</h3>
-        <form action = "/?page=checkout_shipping" method="post" class="navbar-form">
+        <h3><a href="/?page=checkout_shipping">&larrhk;</a>
+            Payment step:</h3>
+        <form action = "/?page=checkout_payment" method="post" class="navbar-form">
             <div class="form-group">
-                <select class="form-control" id="shipping" name="shipping">
+                <select class="form-control" id="payment" name="payment">
                     <?php foreach($this->get('methods') as $method): ?>
                         <option value=<?php echo $method->getCode(); ?>
-                            <?php if($this->get('shipping_code') == $method->getCode()): ?>
+                                <?php if($this->get('payment_code') == $method->getCode()): ?>
                                 selected
                             <?php endif; ?>
                             >
-                            <?php echo $method->getLabel() . $method->getPrice() . '$'; ?>
+                            <?php echo $method->getLabel(); ?>
                         </option>
                     <?php endforeach; ?>
                 </select>

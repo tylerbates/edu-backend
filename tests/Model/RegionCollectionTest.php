@@ -12,7 +12,7 @@ class RegionCollectionTest extends \PHPUnit_Framework_TestCase
             ->method('fetch')
             ->will($this->returnValue(
                 [
-                    ['region'=>'Rostov obl']
+                    ['name'=>'Rostov obl']
                 ]
             ));
 
@@ -28,8 +28,8 @@ class RegionCollectionTest extends \PHPUnit_Framework_TestCase
             ->method('fetch')
             ->will($this->returnValue(
                 [
-                    ['region' => 'Rostov obl'],
-                    ['region' => 'Vologda obl']
+                    ['name' => 'Rostov obl'],
+                    ['name' => 'Vologda obl']
                 ]
             ));
 

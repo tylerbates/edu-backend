@@ -149,9 +149,16 @@ CREATE TABLE shipping_rate (
   PRIMARY KEY (rate_id)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8  AUTO_INCREMENT=1;
 
+alter table shipping_rate add column courier bool null;
+alter table shipping_rate add column pbd bool null;
+
+update shipping_rate set courier = true where rate_id=1;
+update shipping_rate set courier = true, pbd=true where rate_id=2;
+
 insert into shipping_rate (city,price) values ('Rostov',100),('Taganrog',200);
 
 alter table quotes add  column shipping_code varchar(255) COLLATE utf8_bin NULL;
+alter table quotes add  column payment_code varchar(255) COLLATE utf8_bin NULL;
 
 CREATE TABLE cities (
   city_id  INT(11) UNSIGNED  NOT NULL  AUTO_INCREMENT,

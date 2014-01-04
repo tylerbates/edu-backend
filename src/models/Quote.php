@@ -85,4 +85,14 @@ class Quote extends Entity
     {
         $this->_data['shipping_code'] = $code;
     }
+
+    public function getPaymentCode()
+    {
+        return $this->_data['payment_code'];
+    }
+
+    public function setPaymentMethod($code)
+    {
+        $this->_data['payment_code'] = $code;
+    }
 }

@@ -131,5 +131,8 @@ class DiC
     {
         $this->_im->setParameters('App\Model\Shipping\Factory',['table'=>'App\Model\Resource\Table\ShippingRate']);
         $this->_im->addAlias('ShippingFactory','App\Model\Shipping\Factory');
+
+        $this->_im->setParameters('App\Model\Payment\Factory',['table'=>'App\Model\Resource\Table\ShippingRate']);
+        $this->_im->addAlias('PaymentFactory','App\Model\Payment\Factory');
     }
 }
