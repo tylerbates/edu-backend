@@ -1,6 +1,8 @@
 <?php
 namespace App\Controller;
 
+use App\Model\Quote;
+
 class CheckoutController extends SalesController
 {
     public function addressAction()
@@ -30,7 +32,9 @@ class CheckoutController extends SalesController
     public function shippingAction()
     {
         $quote = $this->_initQuote();
-        $methods = $this->_di->get('ShippingFactory', ['address'=>$quote->getAddress()])->getMethods();
+        $factory = $this->_di->get('ShippingFactory');
+        $factory->setAddress($quote->getAddress());
+        $methods = $factory->getMethods();
         $shipping_code = $quote->getShippingCode();
         if(isset($_POST['shipping']))
         {
@@ -42,8 +46,7 @@ class CheckoutController extends SalesController
             'template'=>'checkout_shipping',
             'params'=>[
                 'methods'=>$methods,
-                'shipping_code'=>$shipping_code,
-                'address'=>$quote->getAddress()->getCity()
+                'shipping_code'=>$shipping_code
             ]
         ]);
     }
@@ -59,7 +62,7 @@ class CheckoutController extends SalesController
         {
             $quote->setPaymentMethod($_POST['payment']);
             $quote->save();
-            $this->_redirect('checkout_payment');
+            $this->_redirect('checkout_order');
         }
         return $this->_di->get('View',[
             'template'=>'checkout_payment',
@@ -72,6 +75,61 @@ class CheckoutController extends SalesController
 
     public function orderAction()
     {
+        //var_dump($this->_di->get('SmtpTransport'));die;
+        $quote = $this->_initQuote();
+        $quote->collectTotals();
+        $quote->save();
+        $prototype = $this->_di->get('Product',['data'=>[]]);
+        $products = $quote->getItems()->assignProducts($prototype);
 
+        if($this->_isPost())
+        {
+            $order = $this->_di->get('Order' ,['data'=>[]]);
+            $this->_di->get('QuoteConverter')->toOrder($quote,$order);
+            $order->save();
+            $order->sendMail();
+        }
+
+        return $this->_di->get('View',[
+            'template'=>'checkout_order',
+            'params'=>[
+                'quote'=>$quote,
+                'address'=>$quote->getAddress(),
+                'products'=>$products,
+                'shipping_label'=>$this->_getLabels($quote)['shipping_label'],
+                'payment_label'=>$this->_getLabels($quote)['payment_label']
+            ]
+        ]);
+    }
+
+    private function _getLabels(Quote $quote)
+    {
+        $shippingMethod = '';
+        $paymentMethod = '';
+        $factory = $this->_di->get('ShippingFactory');
+        $factory->setAddress($quote->getAddress());
+        $methods = $factory->getMethods();
+        foreach ($methods as $method)
+        {
+            if($quote->getShippingCode() == $method->getCode())
+            {
+                $shippingMethod = $method->getLabel();
+            }
+        }
+
+        $methods = $this->_di->get('PaymentFactory',['address'=>$quote->getAddress()])
+            ->getMethods()
+            ->avaliable();
+        foreach ($methods as $method)
+        {
+            if($quote->getPaymentCode() == $method->getCode())
+            {
+                $paymentMethod = $method->getLabel();
+            }
+        }
+        return [
+            'shipping_label'=>$shippingMethod,
+            'payment_label'=>$paymentMethod
+        ];
     }
 }

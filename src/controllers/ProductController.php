@@ -12,8 +12,8 @@ class ProductController extends Controller
             ->setItemCountPerPage(2)
             ->setCurrentPageNumber(isset($_GET['p']) ? $_GET['p'] : 1);
         $pages = $paginator->getPages();
-        $_products = $this->_di->get('ProductCollection');
-        $products = $_products->getProducts();
+        $prototype = $this->_di->get('Product',['data'=>[]]);
+        $products = $this->_di->get('ProductCollection',['prototype'=>$prototype]);
 
         return $this->_di->get('View',[
             'template'=>'product_list',

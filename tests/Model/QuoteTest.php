@@ -86,4 +86,36 @@ class QuoteTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame($address,$quote->getAddress());
     }
+
+    public function testCollectsTotalsFromCollectors()
+    {
+        $collectors = [
+            'subtotal'=>$this->_createTotal(42),
+            'shipping'=>$this->_createTotal(24),
+            'grand_total'=>$this->_createTotal(42+24)
+        ];
+
+        $totalsFactory = $this->getMockBuilder('App\Model\Quote\CollectorsFactory',['getCollectors'])
+            ->disableOriginalConstructor()
+            ->getMock();
+        $totalsFactory->expects($this->once())
+            ->method('getCollectors')
+            ->will($this->returnValue($collectors));
+
+        $quote = new Quote([],null,null,null,$totalsFactory);
+        $quote->collectTotals();
+        $this->assertEquals(42,$quote->getSubtotal());
+        $this->assertEquals(24,$quote->getShipping());
+        $this->assertEquals(42+24,$quote->getGrandTotal());
+    }
+
+    private function _createTotal($value)
+    {
+        $total = $this->getMock('App\Model\Quote\ICollector',['collect']);
+        $total->expects($this->once())
+            ->method('collect')
+            ->will($this->returnValue($value));
+
+        return $total;
+    }
 }

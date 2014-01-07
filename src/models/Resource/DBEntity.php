@@ -64,10 +64,10 @@ class DBEntity implements IResourceEntity
 
     private function _insertItem($fields)
     {
-        $filedList = implode(',', $fields);
+        $fieldList = implode(',', $fields);
         $bindList = implode(',', $this->_prepareBinds($fields));
         $stmt = $this->_connection->prepare(
-            "INSERT INTO {$this->_table->getName()} ({$filedList}) VALUES ({$bindList})"
+            "INSERT INTO {$this->_table->getName()} ({$fieldList}) VALUES ({$bindList})"
         );
         return $stmt;
     }

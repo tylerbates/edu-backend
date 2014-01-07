@@ -73,6 +73,39 @@ class DiC
         $this->_im->addAlias('Customer', 'App\Model\Customer');
     }
 
+    private function _assembleSmtp()
+    {
+        $this->_im->setParameters('Zend\Mail\Transport\SmtpOptions',[
+            'options'=>[
+                'name'=>'yourproductcatalog.com',
+                'host'=>'smtp.gmail.com',
+                'connection_class' => 'login',
+                'port'=>'465',
+                'connection_config'=>[
+                    'ssl'=>'ssl',
+                    'username' => 'yourproductcatalog@gmail.com',
+                    'password' => 'sdfgpoiu123'
+                ]
+            ]
+        ]);
+
+        $this->_im->addAlias('SmtpOptions','Zend\Mail\Transport\SmtpOptions');
+
+        $this->_im->setParameters('Zend\Mail\Transport\Smtp',[
+            'options'=>$this->_di->get('SmtpOptions')
+        ]);
+        $this->_im->addAlias('SmtpTransport','Zend\Mail\Transport\Smtp');
+    }
+
+    private function _assembleOrder()
+    {
+        $this->_im->setParameters('App\Model\Order', [
+            'table'=>'App\Model\Resource\Table\Order',
+            'transport'=>$this->_di->get('SmtpTransport')
+        ]);
+        $this->_im->addAlias('Order','App\Model\Order');
+    }
+
     private function _assembleAddress()
     {
         $this->_im->setParameters('App\Model\Address', ['table' => 'App\Model\Resource\Table\Address', 'data'=>[]]);
@@ -91,6 +124,30 @@ class DiC
         $this->_im->addAlias('RegionCollection', 'App\Model\RegionCollection');
     }
 
+    private function _assembleFactory()
+    {
+        $this->_im->setParameters('App\Model\Shipping\Factory',['table'=>'App\Model\Resource\Table\ShippingRate']);
+        $this->_im->addAlias('ShippingFactory','App\Model\Shipping\Factory');
+
+        $this->_im->setParameters('App\Model\Payment\Factory',['table'=>'App\Model\Resource\Table\ShippingRate']);
+        $this->_im->addAlias('PaymentFactory','App\Model\Payment\Factory');
+
+        $this->_im->setParameters('App\Model\Quote\CollectorsFactory',[
+            'prototype'=>$this->_di->get('Product',['data'=>[]]),
+            'factory'=>$this->_di->get('ShippingFactory')
+        ]);
+
+        $this->_im->setParameters('App\Model\Quote\ConverterFactory',[
+            'prototype'=>$this->_di->get('Product',['data'=>[]])
+        ]);
+    }
+
+    private function _assembleConverter()
+    {
+        $this->_im->setParameters('App\Model\Quote\Converter',['factory'=>'App\Model\Quote\ConverterFactory']);
+        $this->_im->addAlias('QuoteConverter','App\Model\Quote\Converter');
+    }
+
     private function _assembleQuote()
     {
         $this->_im->setParameters('App\Model\QuoteItem', ['table' => 'App\Model\Resource\Table\QuoteItem' , 'data'=>[]]);
@@ -105,7 +162,8 @@ class DiC
         $this->_im->setParameters('App\Model\Quote', [
             'table' => 'App\Model\Resource\Table\Quote',
             'items'=>$this->_di->get('App\Model\QuoteItemCollection'),
-            'address'=>$this->_di->get('Address')
+            'address'=>$this->_di->get('Address'),
+            'collectorsFactory'=>$this->_di->get('App\Model\Quote\CollectorsFactory')
         ]);
         $this->_im->addAlias('Quote', 'App\Model\Quote');
     }
@@ -125,14 +183,5 @@ class DiC
     {
         $this->_im->addAlias('Session','App\Model\Session');
         $this->_im->setParameters('App\Model\ISessionUser', ['session'=>$this->_di->get('Session')]);
-    }
-
-    private function _assembleFactory()
-    {
-        $this->_im->setParameters('App\Model\Shipping\Factory',['table'=>'App\Model\Resource\Table\ShippingRate']);
-        $this->_im->addAlias('ShippingFactory','App\Model\Shipping\Factory');
-
-        $this->_im->setParameters('App\Model\Payment\Factory',['table'=>'App\Model\Resource\Table\ShippingRate']);
-        $this->_im->addAlias('PaymentFactory','App\Model\Payment\Factory');
     }
 }

@@ -1,0 +1,52 @@
+<div class="container">
+    <div class="jumbotron">
+        <h3><a href="/?page=checkout_payment">&larrhk;</a>
+            Last step:</h3>
+        <h3>Products:</h3>
+        <table class="table">
+            <tr>
+                <td>Name
+                <td>Price
+                <td>Quantity
+            </tr>
+            <?php foreach($this->get('products') as $product): ?>
+                <tr>
+                    <?php $price = $product->isSpecialPriceApplied() ? $product->getSpecialPrice() : $product->getPrice(); ?>
+                    <td><?php echo $product->getName()?>
+                    <td><?php echo $price ?>
+                    <td><?php echo $product->getQty(); ?>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+        Subtotal: <?php echo $this->get('quote')->getSubtotal(); ?>
+        <h3>Address:</h3>
+        <table class="table">
+            <tr>
+                <td>Region</td>
+                <td><?php echo $this->get('address')->getRegion(); ?></td>
+            </tr>
+            <tr>
+                <td>City</td>
+                <td><?php echo $this->get('address')->getCity(); ?></td>
+            </tr>
+            <tr>
+                <td>Mail Index</td>
+                <td><?php echo $this->get('address')->getMailIndex(); ?></td>
+            </tr>
+            <tr>
+                <td>Street</td>
+                <td><?php echo $this->get('address')->getStreet(); ?></td>
+            </tr>
+            <tr>
+                <td>Flat</td>
+                <td><?php echo $this->get('address')->getFlat(); ?></td>
+            </tr>
+        </table>
+        <h3>Shipping method: </h3><?php echo $this->get('shipping_label') . ' ' . $this->get('quote')->getShipping(); ?>
+        <h3>Payment method: </h3><?php echo $this->get('payment_label'); ?>
+        <h2>Total: <?php echo $this->get('quote')->getGrandTotal(); ?></h2>
+        <form method="post" action="/?page=checkout_order">
+            <input type="submit" class="btn btn-default" value="confirm">
+        </form>
+    </div>
+</div>

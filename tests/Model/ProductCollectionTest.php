@@ -1,5 +1,6 @@
 <?php
 namespace Test\Model;
+use App\Model\Product;
 use App\Model\ProductCollection;
 
 class ProductCollectionTest extends \PHPUnit_Framework_TestCase
@@ -15,8 +16,8 @@ class ProductCollectionTest extends \PHPUnit_Framework_TestCase
                     ['name'=>'Nokla']
                 ]
             ));
-
-        $collection = new ProductCollection($resource);
+        $product = new Product([]);
+        $collection = new ProductCollection($resource,$product);
         $products = $collection->getProducts();
         $this->assertEquals('Nokla',$products[0]->getName());
     }
@@ -32,8 +33,8 @@ class ProductCollectionTest extends \PHPUnit_Framework_TestCase
                     ['sku' => 'bar']
                 ]
             ));
-
-        $collection = new ProductCollection($resource);
+        $product = new Product([]);
+        $collection = new ProductCollection($resource, $product);
         $products = $collection->getProducts();
         $expected = array(0 => 'foo', 1 => 'bar');
         $iterated = false;

@@ -57,4 +57,9 @@ class Product extends Entity
     {
         return $this->_getData('link_id');
     }
+
+    public function setData($data)
+    {
+        $this->_data = $data;
+    }
 }

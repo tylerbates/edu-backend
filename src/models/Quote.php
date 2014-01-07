@@ -1,5 +1,6 @@
 <?php
 namespace App\Model;
+use App\Model\Quote\CollectorsFactory;
 use App\Model\Session;
 use App\Model\Product;
 use App\Model\Resource\IResourceEntity;
@@ -9,15 +10,18 @@ class Quote extends Entity
 {
     private $_items;
     private $_address;
+    private $_collectorsFactory;
 
     public function __construct(
         array $data = [],
         Resource\IResourceEntity $resource = null,
         QuoteItemCollection $items = null,
-        Address $address = null
+        Address $address = null,
+        CollectorsFactory $collectorsFactory = null
     ) {
         $this->_items =  $items;
         $this->_address = $address;
+        $this->_collectorsFactory = $collectorsFactory;
         parent::__construct($data, $resource);
     }
 
@@ -78,7 +82,7 @@ class Quote extends Entity
 
     public function getShippingCode()
     {
-        return $this->_data['shipping_code'];
+        return $this->getData('shipping_code');
     }
 
     public function setShippingMethod($code)
@@ -88,11 +92,39 @@ class Quote extends Entity
 
     public function getPaymentCode()
     {
-        return $this->_data['payment_code'];
+        return $this->getData('payment_code');
     }
 
     public function setPaymentMethod($code)
     {
         $this->_data['payment_code'] = $code;
+    }
+
+    public function collectTotals()
+    {
+        foreach($this->_collectorsFactory->getCollectors() as $field => $collector)
+        {
+            $this->_data[$field] = $collector->collect($this);
+        }
+    }
+
+    public function getSubtotal()
+    {
+        return $this->getData('subtotal');
+    }
+
+    public function getShipping()
+    {
+        return $this->getData('shipping');
+    }
+
+    public function getGrandTotal()
+    {
+        return $this->getData('grand_total');
+    }
+
+    public function getCustomerId()
+    {
+        return $this->getData('customer_id');
     }
 }

@@ -22,4 +22,9 @@ class Factory
             new TableRate($this->_resource,$this->_address)
         ];
     }
+
+    public function setAddress(Address $address)
+    {
+        $this->_address = $address;
+    }
 }

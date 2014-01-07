@@ -18,13 +18,15 @@ CREATE TABLE sellers (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8  AUTO_INCREMENT=1;
 
 CREATE TABLE orders (
-    order_id  INT(11) UNSIGNED  NOT NULL  AUTO_INCREMENT,
-    created_at DATETIME  NULL,
-    amount DECIMAL(10,2) NULL,
-    customer_id INT(11) UNSIGNED  NOT NULL,
-    seller_id INT(11) UNSIGNED  NOT NULL,
+  order_id  INT(11) UNSIGNED  NOT NULL  AUTO_INCREMENT,
+  created_at DATETIME NULL,
+  customer_id INT(11) UNSIGNED  NOT NULL,
+  shipping_method VARCHAR(255) COLLATE utf8_bin NULL,
+  payment_method VARCHAR(255) COLLATE utf8_bin NULL,
+  address VARCHAR(255) COLLATE utf8_bin NULL,
+  items VARCHAR(255) COLLATE utf8_bin NULL,
 
-   PRIMARY KEY (order_id)
+  PRIMARY KEY (order_id)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8  AUTO_INCREMENT=1;
 
 CREATE TABLE products (
@@ -159,6 +161,9 @@ insert into shipping_rate (city,price) values ('Rostov',100),('Taganrog',200);
 
 alter table quotes add  column shipping_code varchar(255) COLLATE utf8_bin NULL;
 alter table quotes add  column payment_code varchar(255) COLLATE utf8_bin NULL;
+alter table quotes add column subtotal decimal(10,2) null;
+alter table quotes add column shipping decimal(10,2) null;
+alter table quotes add column grand_total decimal(10,2) null;
 
 CREATE TABLE cities (
   city_id  INT(11) UNSIGNED  NOT NULL  AUTO_INCREMENT,
