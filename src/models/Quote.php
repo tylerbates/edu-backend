@@ -47,6 +47,7 @@ class Quote extends Entity
         {
             $this->_data['customer_id'] = $session->getUserId();
             $this->save();
+            $this->load((int) $session->getUserId(),'customer_id');
             $session->setQuoteId($this->getId());
         }
     }

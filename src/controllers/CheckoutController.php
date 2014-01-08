@@ -75,7 +75,6 @@ class CheckoutController extends SalesController
 
     public function orderAction()
     {
-        //var_dump($this->_di->get('SmtpTransport'));die;
         $quote = $this->_initQuote();
         $quote->collectTotals();
         $quote->save();

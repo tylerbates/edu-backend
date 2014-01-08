@@ -52,6 +52,7 @@ class CustomerController extends SalesController
 
     private function _registerCustomer()
     {
+        $items = $this->_initQuote()->getItems();
         $resource = $this->_di->get('ResourceEntity',['table' => new CustomerTable()]);
 
         $info = $_POST['customer'];
@@ -59,9 +60,9 @@ class CustomerController extends SalesController
         $customer = $this->_di->get('Customer', ['data'=>$info]);
         $customer->save($resource);
         $session = $this->_di->get('Session');
-        $session->setUser(['customer_id' => (int) $customer->getId()]);
-        $this->_initQuote();
-        $session->unsetUser();
+        $session->setUser(['customer_id' => (int) $customer->getId(),'name'=>$customer->getName()]);
+        $quote = $this->_initQuote();
+        $items->assignToQuote($quote);
         return  $customer->getId();
     }
 }

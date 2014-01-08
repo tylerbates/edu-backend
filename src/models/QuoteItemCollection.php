@@ -19,6 +19,14 @@ class QuoteItemCollection extends EntityCollection
         $this->_getItems();
     }
 
+    public function assignToQuote(Quote $quote)
+    {
+        foreach($this->_items as $item)
+        {
+            $item->assignToQuote($quote);
+        }
+    }
+
     public function assignProducts(Product $prototype)
     {
         $products = [];

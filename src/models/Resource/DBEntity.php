@@ -39,7 +39,6 @@ class DBEntity implements IResourceEntity
             $stmt = $this->_insertItem($fields);
         }
         $stmt->execute(array_combine($this->_prepareBinds($fields),$data));
-
         return $this->_connection->lastInsertId($this->_table->getPrimaryKey());
     }
 

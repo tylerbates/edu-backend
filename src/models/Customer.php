@@ -14,4 +14,9 @@ class Customer extends Entity
     {
         return $this->_getData('customer_id');
     }
+
+    public function getName()
+    {
+        return $this->_getData('name');
+    }
 }
