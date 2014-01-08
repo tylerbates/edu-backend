@@ -85,4 +85,9 @@ class Session
     {
         unset($_SESSION['quote_id']);
     }
+
+    public function isAdmin()
+    {
+        return isset($_SESSION['user']['admin_id']);
+    }
 }

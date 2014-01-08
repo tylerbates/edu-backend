@@ -2,7 +2,6 @@
 namespace App\Controller;
 
 use App\Model\Resource\Table\Customer as CustomerTable;
-use App\Model\Session;
 
 class CustomerController extends SalesController
 {
@@ -10,7 +9,7 @@ class CustomerController extends SalesController
     {
         $session = $this->_di->get('Session');
         $session->unsetUser();
-        header('Location: /');
+        $this->_redirect('product_list');
     }
 
     public function loginAction()

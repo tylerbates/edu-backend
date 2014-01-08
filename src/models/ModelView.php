@@ -30,6 +30,11 @@ class ModelView implements ISessionUser
         require_once $this->_templateDir . $this->_template . '.phtml';
     }
 
+    public function renderMenu()
+    {
+        require_once $this->_templateDir . 'admin_menu.phtml';
+    }
+
     public function get($param)
     {
         return $this->_params[$param];

@@ -1,0 +1,36 @@
+<table class="table">
+    <tr>
+        <td>City
+        <td>Price
+    </tr>
+    <?php foreach($this->get('collection') as $item): ?>
+        <tr>
+            <td><?php echo $item['city']; ?>
+            <td><?php echo $item['price']; ?>
+        </tr>
+    <?php endforeach; ?>
+</table>
+<?php if(isset($_POST['add'])): ?>
+    <form method="post" action="/?page=manage_shipping">
+        <table class="table">
+            <tr>
+                <td>
+                    <select id="city" name="shipping[city]" class="form-control">
+                        <?php foreach($this->get('cities') as $city): ?>
+                            <option>
+                                <?php echo $city->getCity(); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </td>
+                <td><input type="text" class="form-control" name="shipping[price]" placeholder="Price"></td>
+            </tr>
+        </table>
+        <input type="submit" value="add" class="btn btn-default">
+    </form>
+<?php endif; if(!isset($_POST['add'])): ?>
+<form method="post" action="/?page=manage_shipping">
+    <input type="hidden" value="true" name="add">
+    <input type="submit" value="add" class="btn btn-default">
+</form>
+<?php endif; ?>

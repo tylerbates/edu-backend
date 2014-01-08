@@ -11,4 +11,9 @@ class CityCollection extends EntityCollection
             },$this->_resource->fetch()
         );
     }
+
+    public function getIterator()
+    {
+        return new \ArrayIterator($this->getCities());
+    }
 }

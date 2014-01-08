@@ -19,7 +19,9 @@ class ConverterTest extends \PHPUnit_Framework_TestCase
             ->method('toOrder')
             ->with($this->equalTo($quote),$this->equalTo($order));
 
-        $converterFactory = $this->getMock('App\Model\Quote\ConverterFactory');
+        $converterFactory = $this->getMockBuilder('App\Model\Quote\ConverterFactory')
+            ->disableOriginalConstructor()
+            ->getMock();
         $converterFactory->expects($this->once())
             ->method('getConverters')
             ->will($this->returnValue([$partConverter]));

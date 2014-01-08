@@ -1,0 +1,25 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-2 sidebar" role="navigation">
+            <div class="list-group">
+                <a class="list-group-item <?php if($_GET['page'] == 'manage_product'): ?>active<?php endif; ?>"
+                   href="/?page=manage_product" >manage products</a>
+                <a class="list-group-item <?php if($_GET['page'] == 'manage_review'): ?>active<?php endif; ?>"
+                   href="/?page=manage_review">manage reviews</a>
+                <a class="list-group-item <?php if($_GET['page'] == 'manage_customer'): ?>active<?php endif; ?>"
+                   href="/?page=manage_customer">manage customers</a>
+                <a class="list-group-item <?php if($_GET['page'] == 'manage_order'): ?>active<?php endif; ?>"
+                   href="/?page=manage_order">manage orders</a>
+                <a class="list-group-item <?php if($_GET['page'] == 'manage_coupon'): ?>active<?php endif; ?>"
+                   href="/?page=manage_coupon">manage coupons</a>
+                <a class="list-group-item <?php if($_GET['page'] == 'manage_shipping'): ?>active<?php endif; ?>"
+                   href="/?page=manage_shipping">manage shipping prices</a>
+            </div>
+        </div>
+        <div class="jumbotron col-md-10">
+            <?php $this->renderTemplate(); ?>
+        </div>
+    </div>
+</div>
+
+

@@ -73,6 +73,12 @@ class DiC
         $this->_im->addAlias('Customer', 'App\Model\Customer');
     }
 
+    private function _assembleAdmin()
+    {
+        $this->_im->setParameters('App\Model\Admin', ['table' => 'App\Model\Resource\Table\Admin']);
+        $this->_im->addAlias('Admin', 'App\Model\Admin');
+    }
+
     private function _assembleSmtp()
     {
         $this->_im->setParameters('Zend\Mail\Transport\SmtpOptions',[
@@ -104,6 +110,12 @@ class DiC
             'transport'=>$this->_di->get('SmtpTransport')
         ]);
         $this->_im->addAlias('Order','App\Model\Order');
+    }
+
+    private function _assembleManagement()
+    {
+        $this->_im->setParameters('App\Model\Management\ShippingPriceCollection',['table'=>'App\Model\Resource\Table\ShippingRate']);
+        $this->_im->addAlias('ShippingPriceCollection','App\Model\Management\ShippingPriceCollection');
     }
 
     private function _assembleAddress()

@@ -7,6 +7,15 @@ CREATE TABLE customers (
    PRIMARY KEY (customer_id)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8  AUTO_INCREMENT=1;
 
+CREATE TABLE admins (
+  admin_id  INT(11) UNSIGNED  NOT NULL  AUTO_INCREMENT,
+  name VARCHAR(255) COLLATE utf8_bin NOT NULL UNIQUE,
+  password VARCHAR(255) COLLATE utf8_bin NOT NULL,
+
+  PRIMARY KEY (admin_id)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8  AUTO_INCREMENT=1;
+
+insert into admins (name,password) values ('tylerbates', md5('123123'));
 
 CREATE TABLE sellers (
     seller_id  INT(11) UNSIGNED  NOT NULL  AUTO_INCREMENT,

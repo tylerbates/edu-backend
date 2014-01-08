@@ -1,0 +1,18 @@
+<table class="table">
+    <tr>
+        <td>Name
+        <td>Sku
+        <td>Image
+        <td>Price
+        <td>Special price
+    </tr>
+    <?php foreach($this->get('products') as $product): ?>
+        <tr>
+            <td><?php echo $product->getName(); ?>
+            <td><?php echo $product->getSku(); ?>
+            <td><img class="img-small" src="<?php echo $product->getImage(); ?>">
+            <td><?php echo $product->getPrice(); ?>
+            <td><?php echo $product->getSpecialPrice(); ?>
+        </tr>
+    <?php endforeach; ?>
+</table>
