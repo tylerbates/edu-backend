@@ -1,15 +1,67 @@
-<table class="table">
-    <tr>
-        <td>City
-        <td>Price
-    </tr>
-    <?php foreach($this->get('collection') as $item): ?>
+<?php
+$id = 0;
+if(isset($_POST['sh_id'])) $id = $_POST['sh_id'];
+?>
+
+<script>
+    function setId(id,purpose)
+    {
+        var f = document.forms[0];
+        if(purpose == 'edit')
+        {
+            f.delete_id.disabled = true;
+            f.sh_id.value = id;
+        }
+        if(purpose == 'delete')
+        {
+            f.delete_id.value = id;
+        }
+        f.submit();
+    }
+</script>
+<form method="post" id="edit" action="/?page=manage_shipping">
+    <table class="table">
         <tr>
-            <td><?php echo $item['city']; ?>
-            <td><?php echo $item['price']; ?>
+            <td>City
+            <td>Price
+            <td>
         </tr>
-    <?php endforeach; ?>
-</table>
+        <?php foreach($this->get('collection') as $item): ?>
+            <tr>
+                <?php if($id == $item->getId()): ?>
+                    <td>
+                        <select id="city" name="shipping[city]" class="form-control">
+                            <?php foreach($this->get('cities') as $city): ?>
+                                <option
+                                    <?php if($city->getCity() == $item->getCity()): ?>
+                                        selected
+                                    <?php endif; ?>
+                                    >
+                                    <?php echo $city->getCity(); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </td>
+                    <td><input type="text" value="<?php echo $item->getPrice(); ?>" class="form-control" name="shipping[price]" placeholder="Price"></td>
+                    <td><input type="submit" value="save" class="btn btn-default"></td>
+                <?php endif; if($id != $item->getId()): ?>
+                    <td>
+                        <?php echo $item->getCity(); ?>
+                    </td>
+                    <td>
+                        <?php echo $item->getPrice(); ?>
+                    </td>
+                    <td>
+                        <input type="button" value="edit" class="btn btn-default" onclick="setId(<?php echo $item->getId(); ?>,'edit')">
+                        <input type="button" value="delete" class="btn btn-default" onclick="setId(<?php echo $item->getId(); ?>,'delete')">
+                    </td>
+                <?php endif; ?>
+            </tr>
+        <?php endforeach; ?>
+    </table>
+    <input type="hidden" name="sh_id" value="">
+    <input type="hidden" name="delete_id" value="">
+</form>
 <?php if(isset($_POST['add'])): ?>
     <form method="post" action="/?page=manage_shipping">
         <table class="table">
@@ -24,9 +76,9 @@
                     </select>
                 </td>
                 <td><input type="text" class="form-control" name="shipping[price]" placeholder="Price"></td>
+                <td><input type="submit" value="add" class="btn btn-default"></td>
             </tr>
         </table>
-        <input type="submit" value="add" class="btn btn-default">
     </form>
 <?php endif; if(!isset($_POST['add'])): ?>
 <form method="post" action="/?page=manage_shipping">

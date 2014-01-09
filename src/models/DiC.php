@@ -114,6 +114,9 @@ class DiC
 
     private function _assembleManagement()
     {
+        $this->_im->setParameters('App\Model\Management\ShippingPrice',['table'=>'App\Model\Resource\Table\ShippingRate']);
+        $this->_im->addAlias('ShippingPrice','App\Model\Management\ShippingPrice');
+
         $this->_im->setParameters('App\Model\Management\ShippingPriceCollection',['table'=>'App\Model\Resource\Table\ShippingRate']);
         $this->_im->addAlias('ShippingPriceCollection','App\Model\Management\ShippingPriceCollection');
     }

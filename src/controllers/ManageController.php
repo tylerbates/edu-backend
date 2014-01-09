@@ -88,7 +88,18 @@ class ManageController extends Controller
             $this->_redirect('product_list');
         }else
         {
-            $collection = $this->_di->get('ShippingPriceCollection');
+            if(isset($_POST['shipping']))
+            {
+                $this->_addShipping($_POST['shipping']);
+            }
+
+            if(isset($_POST['delete_id']))
+            {
+                $this->_deleteShipping($_POST['delete_id']);
+            }
+
+            $prototype = $this->_di->get('ShippingPrice',['data'=>[]]);
+            $collection = $this->_di->get('ShippingPriceCollection',['prototype'=>$prototype]);
             $cities = $this->_di->get('CityCollection');
             return $this->_di->get('View',[
                 'template'=>'manage_shipping',
@@ -98,5 +109,21 @@ class ManageController extends Controller
                 ]
             ]);
         }
+    }
+
+    private function _addShipping($data)
+    {
+        $shipping = $this->_di->get('ShippingPrice',['data'=>$data]);
+        $shipping->load($data['city'],'city');
+        $shipping->add($data);
+        $this->_redirect('manage_shipping');
+    }
+
+    private function _deleteShipping($id)
+    {
+        $shipping = $this->_di->get('ShippingPrice',['data'=>[]]);
+        $shipping->load($id,'rate_id');
+        $shipping->delete();
+        $this->_redirect('manage_shipping');
     }
 } 
