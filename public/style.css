@@ -20,3 +20,16 @@ img
 {
     max-height: 50px;
 }
+
+input[type="submit"].link-like
+{
+    background: transparent;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+}
+
+form.inline
+{
+    display: inline;
+}

@@ -74,4 +74,20 @@ class DBCollection implements IResourceCollection
         );
         return $result->current()['count'];
     }
+
+    public function sort($field, $direction)
+    {
+        $this->_select->order("{$field} {$direction}");
+    }
+
+    public function find($request,$columns)
+    {
+        $expression = "";
+        foreach ($columns as $column)
+        {
+            $expression .= "{$column} LIKE '%{$request}%' OR ";
+        }
+        $expression = substr($expression,0,strlen($expression)-4);
+        $this->_select->where($expression);
+    }
 }

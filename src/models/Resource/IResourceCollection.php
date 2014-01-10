@@ -12,4 +12,8 @@ interface IResourceCollection
     public function limit($limit, $offset = 0);
 
     public function count();
+
+    public function sort($field, $direction);
+
+    public function find($request, $columns);
 }

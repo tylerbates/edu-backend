@@ -27,4 +27,14 @@ class ShippingPriceCollection implements \IteratorAggregate
     {
         return new \ArrayIterator($this->getPrices());
     }
+
+    public function sort($field, $direction)
+    {
+        $this->_resource->sort($field,$direction);
+    }
+
+    public function filter($request, $columns)
+    {
+        $this->_resource->find($request,$columns);
+    }
 }

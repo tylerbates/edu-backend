@@ -98,8 +98,24 @@ class ManageController extends Controller
                 $this->_deleteShipping($_POST['delete_id']);
             }
 
+            if(isset($_FILES['csv']))
+            {
+                $this->_loadFromCSV($_FILES['csv']);
+            }
+
             $prototype = $this->_di->get('ShippingPrice',['data'=>[]]);
             $collection = $this->_di->get('ShippingPriceCollection',['prototype'=>$prototype]);
+
+            if(isset($_POST['search_request']))
+            {
+                $collection->filter($_POST['search_request'],['city','price']);
+            }
+
+            if(isset($_POST['sort']))
+            {
+                $collection->sort($_POST['sort']['sort_field'],$_POST['sort']['sort_direction']);
+            }
+
             $cities = $this->_di->get('CityCollection');
             return $this->_di->get('View',[
                 'template'=>'manage_shipping',
@@ -124,6 +140,32 @@ class ManageController extends Controller
         $shipping = $this->_di->get('ShippingPrice',['data'=>[]]);
         $shipping->load($id,'rate_id');
         $shipping->delete();
+        $this->_redirect('manage_shipping');
+    }
+
+    private function _loadFromCSV($file)
+    {
+        $records =[];
+        $upload_dir = '/vagrant/src/uploads/';
+        $upload_file = $upload_dir . basename($file['name']);
+        move_uploaded_file($file['tmp_name'],$upload_file);
+        $handler = fopen($upload_file,"r");
+        while(!feof($handler))
+        {
+            $data = fgets($handler);
+            if(!(count(explode(';',$data)) < 2))
+            {
+                $newrecord['city'] = explode(';',$data)[0];
+                $newrecord['price'] = (float) substr(explode(';',$data)[1],0,strlen(explode(';',$data)[1])-2);
+                $records[] = $newrecord;
+            }
+        }
+        fclose($handler);
+        unlink($upload_file);
+        foreach($records as $record)
+        {
+            $this->_addShipping($record);
+        }
         $this->_redirect('manage_shipping');
     }
 } 
