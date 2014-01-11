@@ -11,7 +11,7 @@ class QuoteController extends SalesController
         $quoteItem = $this->_initQuoteItem();
         $quoteItem->addQty((int) $_POST['qty']);
         $quoteItem->save();
-        $this->_redirect('product_list');
+        $this->_redirect('product_view',['id'=>$_POST['product_id']]);
     }
 
     public function updateAction()

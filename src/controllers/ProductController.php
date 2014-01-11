@@ -23,6 +23,11 @@ class ProductController extends Controller
 
     public function viewAction()
     {
+        $paginator = $this->_di->get('Paginator');
+        $paginator
+            ->setItemCountPerPage(1)
+            ->setCurrentPageNumber(isset($_GET['p']) ? $_GET['p'] : 1);
+        $pages = $paginator->getPages();
         $this->_di->get('Session')->generateToken();
         $product = $this->_di->get('Product',['data'=>[]]);
         $product->load($_GET['id'],(new ProductTable())->getPrimaryKey());
@@ -34,7 +39,12 @@ class ProductController extends Controller
 
         return $this->_di->get('View',[
             'template'=>'product_view',
-            'params'=>['product'=>$product, 'rating'=>$average_rating, 'reviews'=>$_reviews]
+            'params'=>[
+                'product'=>$product,
+                'rating'=>$average_rating,
+                'reviews'=>$_reviews,
+                'pages'=>$pages
+            ]
         ]);
     }
 }

@@ -3,7 +3,7 @@ namespace App\Model\Shipping;
 
 class Fixed implements IMethod
 {
-    private $_price = 42;
+    private $_price = 100;
     private $_code = 'fixed';
     private $_label = 'fixed price: ';
 

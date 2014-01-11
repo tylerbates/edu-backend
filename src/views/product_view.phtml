@@ -1,8 +1,9 @@
 <?php $product = $this->get('product'); ?>
+<?php if(!isset($_GET['p'])) $_GET['p'] = '1';?>
 <div class="container">
     <div class="jumbotron">
         <div class="media">
-            <h2 class="media-heading"><?php echo $product->getName(); ?></h2>
+            <h2 class="media-heading"><?php echo $product->getName() . ' rating: ' . $this->get('rating'); ?></h2>
             <img class="media-object pull-left" src="<?php echo $product->getImage(); ?>">
             <div class="media-body">
                 <span><p><?php echo "Sku: " . $product->getSku();?></span>
@@ -14,7 +15,13 @@
                         <span class="product_price"><?php echo " " . $product->getSpecialPrice(); ?></span>
                     <?php endif; ?>
                 </p>
-                <h2><?php echo "Average rating: " . $this->get('rating'); ?></h2>
+                <form method="post" action="/?page=quote_add" class="navbar-form navbar-left">
+                    <div class="form-group">
+                        <input type="hidden" id="product_id" name="product_id" value=<?php echo $product->getId(); ?>>
+                        <input type="hidden" value="1" id="qty" name="qty">
+                    </div>
+                    <input type="submit" class="btn btn-default" value="add to cart">
+                </form>
             </div>
         </div>
     </div>
@@ -24,6 +31,15 @@
         <h2>Reviews:</h2>
     </div>
 </div>
+
+<div class="text-center">
+    <ul class="pagination pagination-sm">
+        <?php for ($page = 1; $page <= $this->get('pages')->pageCount; $page++): ?>
+            <li <?php if($page == $_GET['p']): ?>class="active" <?php endif; ?>><a href="/?page=product_view&&id=<?php echo $product->getId(); ?>&&p=<?php echo $page; ?>"><?php echo $page; ?></a></li>
+        <?php endfor; ?>
+    </ul>
+</div>
+
 <div class="container">
     <?php foreach ($this->get('reviews') as $_review): ?>
     <div class="jumbotron">
@@ -33,6 +49,14 @@
         <span><p><?php echo "Rating: " . $_review->getRating(); ?></span>
     </div>
     <?php endforeach; ?>
+</div>
+
+<div class="text-center">
+    <ul class="pagination pagination-sm">
+        <?php for ($page = 1; $page <= $this->get('pages')->pageCount; $page++): ?>
+            <li <?php if($page == $_GET['p']): ?>class="active" <?php endif; ?>><a href="/?page=product_view&&id=<?php echo $product->getId(); ?>&&p=<?php echo $page; ?>"><?php echo $page; ?></a></li>
+        <?php endfor; ?>
+    </ul>
 </div>
 
 <div class="container">

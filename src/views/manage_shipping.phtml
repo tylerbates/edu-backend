@@ -28,11 +28,13 @@ if(isset($_POST['sh_id'])) $id = $_POST['sh_id'];
     <table class="table">
         <tr>
             <td>City
-                <form method="post" action="/?page=manage_shipping">
-                    <input type="hidden" name="sort[sort_field]" value="city">
-                    <input type="hidden" name="sort[sort_direction]" value="asc">
+                <!-- THIS FORM TAG DISAPPEARS MAGICALLY!!! -->
+                <form method="post" id="first" action="/?page=manage_shipping" class="inline">
+                    <!--<input type="hidden" name="sort[sort_field]" value="city">
+                    <input type="hidden" name="sort[sort_direction]" value="asc">-->
                     <input type="submit" value="&DownArrow;" class="link-like">
                 </form>
+                <!-- THIS FORM TAG DISAPPEARS MAGICALLY!!! -->
                 <form method="post" action="/?page=manage_shipping" class="inline">
                     <input type="hidden" name="sort[sort_field]" value="city">
                     <input type="hidden" name="sort[sort_direction]" value="desc">
@@ -115,7 +117,7 @@ if(isset($_POST['sh_id'])) $id = $_POST['sh_id'];
 <?php endif; ?>
 
 <form enctype="multipart/form-data" method="post" action="/?page=manage_shipping" class="form-inline">
-    <input type="hidden" name="MAX_FILE_SIZE" value="30000">
+    <input type="hidden" name="MAX_FILE_SIZE" value="3000000">
         load data from CSV:
         <div class="fileinput fileinput-new" data-provides="fileinput">
             <span class="btn btn-default btn-file">

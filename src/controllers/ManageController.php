@@ -115,7 +115,6 @@ class ManageController extends Controller
             {
                 $collection->sort($_POST['sort']['sort_field'],$_POST['sort']['sort_direction']);
             }
-
             $cities = $this->_di->get('CityCollection');
             return $this->_di->get('View',[
                 'template'=>'manage_shipping',

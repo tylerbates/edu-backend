@@ -11,5 +11,8 @@ class DataConverter implements IConverter
         $order->setCustomerId((int)$quote->getCustomerId());
         $order->setShippingMethod($quote->getShippingCode());
         $order->setPaymentMethod($quote->getPaymentCode());
+        $order->setSubtotal($quote->getSubtotal());
+        $order->setShipping($quote->getShipping());
+        $order->setGrandTotal($quote->getGrandTotal());
     }
 }

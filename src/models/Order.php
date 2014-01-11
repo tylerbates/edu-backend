@@ -10,10 +10,12 @@ use \Zend\Mime\Message as MimeMessage;
 class Order extends Entity
 {
     private $_transport;
+    private $_prototype;
 
-    public function __construct(array $data, IResourceEntity $resource, Smtp $transport)
+    public function __construct(array $data, IResourceEntity $resource, Smtp $transport, Customer $prototype)
     {
         $this->_transport = $transport;
+        $this->_prototype = $prototype;
         parent::__construct($data,$resource);
     }
 
@@ -42,6 +44,21 @@ class Order extends Entity
         $this->_data['items'] = $items;
     }
 
+    public function setSubtotal($subtotal)
+    {
+        $this->_data['subtotal'] = $subtotal;
+    }
+
+    public function setShipping($shipping)
+    {
+        $this->_data['shipping'] = $shipping;
+    }
+
+    public function setGrandTotal($grand_total)
+    {
+        $this->_data['grand_total'] = $grand_total;
+    }
+
     public function save()
     {
         date_default_timezone_set('Europe/Moscow');
@@ -51,12 +68,21 @@ class Order extends Entity
 
     public function sendMail()
     {
+        $customer = clone $this->_prototype;
+        $customer->load($this->_data['customer_id'],'customer_id');
+        if($name = $customer->getName())
+        {
+            $customer_data = $name;
+        } else $customer_data = $this->_data['customer_id'];
+        $num_order = rand(10000,99999);
         $text = new MimePart("
-            You have new order:\n
-            Customer id: {$this->_data['customer_id']}\n
+            You have new order: {$num_order}\n
+            Date: {$this->_data['created_at']}\n
+            Customer: {$customer_data}\n
             Address: {$this->_data['address']}\n
             Shipping method: {$this->_data['shipping_method']}\n
             Payment method: {$this->_data['payment_method']}\n
+            Totals: {$this->_data['subtotal']}+{$this->_data['shipping']}={$this->_data['grand_total']}\n
             Products:\n
         ");
         $text->type = "text/plain";

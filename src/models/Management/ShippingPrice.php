@@ -16,6 +16,7 @@ class ShippingPrice extends Entity
         {
             $this->_data['price'] = $data['price'];
         } else $this->_data = $data;
+        $this->_data['pbd'] = 1;
         $this->save();
     }
 

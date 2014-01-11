@@ -34,6 +34,9 @@ CREATE TABLE orders (
   payment_method VARCHAR(255) COLLATE utf8_bin NULL,
   address VARCHAR(255) COLLATE utf8_bin NULL,
   items VARCHAR(255) COLLATE utf8_bin NULL,
+  subtotal DECIMAL(10,2) NULL,
+  shipping DECIMAL(10,2) NULL,
+  grand_total DECIMAL(10,2) NULL,
 
   PRIMARY KEY (order_id)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8  AUTO_INCREMENT=1;
@@ -181,6 +184,9 @@ CREATE TABLE cities (
   PRIMARY KEY (city_id)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8  AUTO_INCREMENT=1;
 
+alter table cities add column region_id INT(11) UNSIGNED NULL;
+alter table cities add column name  VARCHAR(255) COLLATE utf8_bin NULL;
+
 CREATE TABLE regions (
   region_id  INT(11) UNSIGNED  NOT NULL  AUTO_INCREMENT,
   name  VARCHAR(255) COLLATE utf8_bin NULL,
@@ -188,6 +194,9 @@ CREATE TABLE regions (
   PRIMARY KEY (region_id)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8  AUTO_INCREMENT=1;
 
-INSERT INTO cities (name) VALUES ('Rostov'),('Taganrog'),('Moskow');
+INSERT INTO cities (name,region_id) VALUES ('Ростов',15789406),('Таганрог',15789406),('Москва',15789407);
 
-INSERT INTO regions (name) VALUES ('Rostovskaya obl.'),('Moskovskaya obl.');
+INSERT INTO regions (name) VALUES ('Ростовская обл'),('Московская обл.');
+
+INSERT INTO shipping_rate (city,price,courier,pbd) VALUES ('Москва',99,1,1);
+insert INTO shipping_rate (city,price,pbd) values ('Таганрог',1000,1);

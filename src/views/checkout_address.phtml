@@ -1,3 +1,13 @@
+<script>
+    function setRegionId(id)
+    {
+        var f = document.getElementById('set_region');
+        alert(f);
+        f.region_id.value = id;
+        f.submit();
+    }
+</script>
+
 <div class="container">
     <div class="jumbotron">
         <h3><a href="/?page=quote_list">&larrhk;</a>
@@ -6,7 +16,7 @@
             <div class="form-group">
                 <select id="region" name="address[region]" class="form-control">
                     <?php foreach($this->get('regions') as $region): ?>
-                        <option
+                        <option onclick="setRegionId(<?php echo $region->getId(); ?>);"
                             <?php if($this->get('address')->getRegion() == $region->getRegion()): ?>
                                 selected
                             <?php endif; ?>
@@ -49,6 +59,9 @@
                        class="form-control">
                 <input type="submit" value="Next" class="btn btn-default">
             </div>
+        </form>
+        <form action = "/?page=checkout_address" method="post" id="set_region">
+            <input type="hidden" name="region_id" value="">
         </form>
     </div>
 </div>

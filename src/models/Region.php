@@ -7,4 +7,14 @@ class Region extends Entity
     {
         return $this->_getData('name');
     }
+
+    public function setData($data)
+    {
+        $this->_data = $data;
+    }
+
+    public function getId()
+    {
+        return $this->_getData('region_id');
+    }
 }

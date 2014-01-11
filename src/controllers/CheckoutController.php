@@ -13,6 +13,7 @@ class CheckoutController extends SalesController
         $cities = $_cities->getCities();
         $quote = $this->_initQuote();
         $address = $quote->getAddress();
+        if(isset($_POST['region_id'])) {var_dump($_POST['region_id']);die;}
         if (isset($_POST['address']))
         {
             $address->setData($_POST['address']);

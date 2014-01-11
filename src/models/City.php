@@ -7,4 +7,9 @@ class City extends Entity
     {
         return $this->_getData('name');
     }
+
+    public function setData($data)
+    {
+        $this->_data = $data;
+    }
 }
