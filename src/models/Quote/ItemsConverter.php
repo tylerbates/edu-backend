@@ -20,9 +20,14 @@ class ItemsConverter implements IConverter
         $products = $quote->getItems()->assignProducts($this->_prototype);
         foreach ($products as $product)
         {
-            $_items[] = implode(',',[$product->getId(),$product->getName(),$product->getQty()]);
-
-            //$items .= '_|' . $product->getId() . '|' . $product->getName() . '|' . $product->getQty() . '|';
+            $price = $product->isSpecialPriceApplied() ? $product->getSpecialPrice() : $product->getPrice();
+            $_items[] = implode(',',[
+                $product->getName(),
+                $product->getSku(),
+                $product->getQty(),
+                $price,
+                $price*$product->getQty()
+            ]);
         }
         $items = implode('|',$_items);
         $order->setItems($items);

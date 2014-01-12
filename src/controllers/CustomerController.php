@@ -20,14 +20,18 @@ class CustomerController extends SalesController
         {
             $info = $_POST['customer'];
             $info['password'] = md5($info['password']);
-            $resource->filterBy('name',$info['name']);
+            $resource->filterBy('email',$info['email']);
             $resource->filterBy('password',$info['password']);
             $logged_in = $resource->fetch();
         }
         if($logged_in)
         {
             $session = $this->_di->get('Session');
-            $session->setUser(['customer_id'=>(int) $logged_in[0]['customer_id'],'name'=>$logged_in[0]['name']]);
+            $session->setUser([
+                'customer_id'=>(int) $logged_in[0]['customer_id'],
+                'name'=>$logged_in[0]['name'],
+                'email'=>$logged_in[0]['email']
+            ]);
             $this->_initQuote();
         }
         return $this->_di->get('View',[
@@ -52,14 +56,18 @@ class CustomerController extends SalesController
     private function _registerCustomer()
     {
         $items = $this->_initQuote()->getItems();
-        $resource = $this->_di->get('ResourceEntity',['table' => new CustomerTable()]);
 
         $info = $_POST['customer'];
         $info['password'] = md5($info['password']);
-        $customer = $this->_di->get('Customer', ['data'=>$info]);
-        $customer->save($resource);
+        $customer = $this->_di->get('Customer', ['data'=>[]]);
+        $customer->setData($info);
+        $customer->save();
         $session = $this->_di->get('Session');
-        $session->setUser(['customer_id' => (int) $customer->getId(),'name'=>$customer->getName()]);
+        $session->setUser([
+            'customer_id' => (int) $customer->getId(),
+            'name'=>$customer->getName(),
+            'email'=>$customer->getEmail()
+        ]);
         $quote = $this->_initQuote();
         $items->assignToQuote($quote);
         return  $customer->getId();

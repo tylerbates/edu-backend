@@ -68,30 +68,7 @@ class Order extends Entity
 
     public function sendMail()
     {
-        $customer = clone $this->_prototype;
-        $customer->load($this->_data['customer_id'],'customer_id');
-        if($name = $customer->getName())
-        {
-            $customer_data = $name;
-        } else $customer_data = $this->_data['customer_id'];
-        $num_order = rand(10000,99999);
-        $text = new MimePart("
-            You have new order: {$num_order}\n
-            Date: {$this->_data['created_at']}\n
-            Customer: {$customer_data}\n
-            Address: {$this->_data['address']}\n
-            Shipping method: {$this->_data['shipping_method']}\n
-            Payment method: {$this->_data['payment_method']}\n
-            Totals: {$this->_data['subtotal']}+{$this->_data['shipping']}={$this->_data['grand_total']}\n
-            Products:\n
-        ");
-        $text->type = "text/plain";
-
-        $html = new MimePart($this->_prepareHtml());
-        $html->type = "text/html";
-
-        $body = new MimeMessage();
-        $body->setParts([$text,$html]);
+        $body = $this->_prepareMessage();
 
         $mail = new Mail\Message();
         $mail->setBody($body);
@@ -112,9 +89,9 @@ class Order extends Entity
         }
 
         $table_header = "
-        <table border='solid'>
+        <table border>
                 <tr>
-                    <td>Product id</td><td>Name</td><td>Quantity</td>
+                    <td>Name</td><td>Sku</td><td>Quantity</td><td>Price</td><td>Summary</td>
                 </tr>
         ";
 
@@ -126,7 +103,7 @@ class Order extends Entity
         {
             $table_parts[] = "
                 <tr>
-                    <td>$item[0]</td><td>$item[1]</td><td>$item[2]</td>
+                    <td>$item[0]</td><td>$item[1]</td><td>$item[2]</td><td>$item[3]</td><td>$item[4]</td>
                 </tr>
             ";
         }
@@ -135,5 +112,39 @@ class Order extends Entity
         array_push($table_parts,$table_footer);
         $table = implode($table_parts);
         return $table;
+    }
+
+    private function _prepareMessage()
+    {
+        $customer = clone $this->_prototype;
+        $customer->load($this->_data['customer_id'], 'customer_id');
+        if ($name = $customer->getName()) {
+            $customer_data = $name;
+        } else $customer_data = $this->_data['customer_id'];
+        $num_order = rand(10000, 99999);
+        $text = new MimePart("
+            You have new order: {$num_order}\n
+            Date: {$this->_data['created_at']}\n
+            Customer: {$customer_data}\n
+            Address: {$this->_data['address']}\n
+            Shipping method: {$this->_data['shipping_method']}\n
+            Payment method: {$this->_data['payment_method']}\n
+            Products:\n
+        ");
+        $text->type = "text/plain";
+
+        $totals_text = new MimePart("
+            Totals:
+            Subtotal: {$this->_data['subtotal']} Shipping: {$this->_data['shipping']}\n
+            Grand Total: {$this->_data['grand_total']}\n
+        ");
+        $totals_text->type = "text/plain";
+
+        $html = new MimePart($this->_prepareHtml());
+        $html->type = "text/html";
+
+        $body = new MimeMessage();
+        $body->setParts([$text, $html, $totals_text]);
+        return $body;
     }
 } 

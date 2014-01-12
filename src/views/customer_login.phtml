@@ -4,13 +4,13 @@
         <h2>Entrance</h2>
         <form action = "/?page=customer_login" method="post" class="navbar-form text-center">
             <div class="form-group">
-                <input type="text" id="name" name="customer[name]" class="form-control" placeholder="Name">
+                <input type="text" id="email" name="customer[email]" class="form-control" placeholder="E-mail">
                 <input type="password" id="password" name="customer[password]" class="form-control" placeholder="Password">
                 <input type="submit" value="Enter" class="btn btn-default">
             </div>
         </form>
         <?php endif; if($this->get('customer')):?>
-            You have logged in as <b><?php echo \App\Model\Session::getUserName();?></b>.
+            You have logged in as <b><?php echo $this->session()->getUserName();?></b>.
             Return to <a href="/">product list</a>?
         <?php endif; ?>
     </div>

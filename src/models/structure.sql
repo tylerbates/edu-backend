@@ -1,11 +1,16 @@
 CREATE TABLE customers (
     customer_id  INT(11) UNSIGNED  NOT NULL  AUTO_INCREMENT,
     name VARCHAR(255) COLLATE utf8_bin NOT NULL UNIQUE,
+    surname VARCHAR(255) COLLATE utf8_bin NOT NULL,
+    email VARCHAR(255) COLLATE utf8_bin NOT NULL,
     password VARCHAR(255) COLLATE utf8_bin NOT NULL,
     rating DECIMAL(10,2) NULL,
 
    PRIMARY KEY (customer_id)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8  AUTO_INCREMENT=1;
+
+alter table customers add column surname VARCHAR(255) COLLATE utf8_bin NOT NULL;
+alter table customers add column email VARCHAR(255) COLLATE utf8_bin NOT NULL;
 
 CREATE TABLE admins (
   admin_id  INT(11) UNSIGNED  NOT NULL  AUTO_INCREMENT,

@@ -58,7 +58,7 @@
 </div>
 
 
-
+<?php if($this->session()->isUserNameSet()): ?>
 <div class="container">
     <div class="jumbotron">
         <form method="post" action="/?page=checkout_address" class="navbar-form">
@@ -66,3 +66,4 @@
         </form>
     </div>
 </div>
+<?php endif; ?>

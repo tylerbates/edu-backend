@@ -66,8 +66,15 @@
             <input type="hidden" name="token" value="<?php echo $this->session()->getToken(); ?>" />
             <input type="hidden" name="product_id" value="<?php echo $product->getId(); ?>"/>
             <div class="form-group">
+                <?php if($this->session()->isAuthorized()): ?>
+                    <input type="hidden" name="name" value="<?php echo $this->session()->getUserName(); ?>"/>
+                    <input type="hidden" name="email" value="<?php echo $this->session()->getUserEmail(); ?>"/>
+                    Name: <?php echo $this->session()->getUserName(); ?><br>
+                    E-mail: <?php echo $this->session()->getUserEmail(); ?>
+                <?php endif; if(!($this->session()->isAuthorized())): ?>
                 <input class="form-control" type="text" name="name" placeholder="Name"/>
                 <input class="form-control" type="text" name="email" placeholder="E-mail"/>
+                <?php endif; ?>
                 <textarea  class="form-control" name="text"></textarea>
                 <label class="text-info">Rating</label>
                 <select name="rating">
