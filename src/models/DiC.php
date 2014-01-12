@@ -45,7 +45,7 @@ class DiC
 
     private function _assemblePaginator()
     {
-        $this->_im->setParameters('Zend\Paginator\Paginator', ['adapter' => 'App\Model\Resource\Paginator','table' => 'App\Model\Resource\Table\Product']);
+        $this->_im->setParameters('Zend\Paginator\Paginator', ['adapter' => 'App\Model\Resource\Paginator']);
         $this->_im->addAlias('Paginator', 'Zend\Paginator\Paginator');
     }
 

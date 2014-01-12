@@ -36,6 +36,11 @@ class Session
         return $_SESSION['user']['name'];
     }
 
+    public function getUserEmail()
+    {
+        return $_SESSION['user']['email'];
+    }
+
     public function isUserNameSet()
     {
         return isset($_SESSION['user']['name']);
