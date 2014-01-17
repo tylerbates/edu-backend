@@ -59,7 +59,7 @@ if(isset($_POST['sh_id'])) $id = $_POST['sh_id'];
             <tr>
                 <?php if($id == $item->getId()): ?>
                     <td>
-                        <select id="city" name="shipping[city]" class="form-control">
+                        <select id="city" name="shipping[city]" class="form-control" contenteditable="true">
                             <?php foreach($this->get('cities') as $city): ?>
                                 <option
                                     <?php if($city->getCity() == $item->getCity()): ?>

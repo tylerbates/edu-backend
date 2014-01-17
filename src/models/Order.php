@@ -11,11 +11,22 @@ class Order extends Entity
 {
     private $_transport;
     private $_prototype;
+    private $_message;
 
-    public function __construct(array $data, IResourceEntity $resource, Smtp $transport, Customer $prototype)
+    public function __construct(
+        array $data,
+        IResourceEntity $resource,
+        Smtp $transport,
+        Customer $prototype,
+        Mail\Message $message
+    )
     {
         $this->_transport = $transport;
         $this->_prototype = $prototype;
+        $this->_message = $message;
+        $this->_message->addFrom('yourproductcatalog@gmail.com', 'your product catalog');
+        $this->_message->addTo('tylerbates098@gmail.com','dear admin');
+        $this->_message->setSubject('new order');
         parent::__construct($data,$resource);
     }
 
@@ -69,14 +80,8 @@ class Order extends Entity
     public function sendMail()
     {
         $body = $this->_prepareMessage();
-
-        $mail = new Mail\Message();
-        $mail->setBody($body);
-        $mail->addFrom('yourproductcatalog@gmail.com', 'your product catalog');
-        $mail->addTo('tylerbates098@gmail.com','dear admin');
-        $mail->setSubject('new order');
-
-        $this->_transport->send($mail);
+        $this->_message->setBody($body);
+        $this->_transport->send($this->_message);
     }
 
     private function _prepareHtml()

@@ -108,7 +108,8 @@ class DiC
         $this->_im->setParameters('App\Model\Order', [
             'table'=>'App\Model\Resource\Table\Order',
             'transport'=>$this->_di->get('SmtpTransport'),
-            'prototype'=>$this->_di->get('Customer',['data'=>[]])
+            'prototype'=>$this->_di->get('Customer',['data'=>[]]),
+            'message'=>'Zend\Mail\Message'
         ]);
         $this->_im->addAlias('Order','App\Model\Order');
     }
