@@ -12,21 +12,21 @@ class Order extends Entity
     private $_transport;
     private $_prototype;
     private $_message;
+    private $_template;
 
     public function __construct(
         array $data,
         IResourceEntity $resource,
         Smtp $transport,
         Customer $prototype,
-        Mail\Message $message
+        Mail\Message $message,
+        ModelView $template
     )
     {
         $this->_transport = $transport;
         $this->_prototype = $prototype;
         $this->_message = $message;
-        $this->_message->addFrom('yourproductcatalog@gmail.com', 'your product catalog');
-        $this->_message->addTo('tylerbates098@gmail.com','dear admin');
-        $this->_message->setSubject('new order');
+        $this->_template = $template;
         parent::__construct($data,$resource);
     }
 
@@ -84,41 +84,6 @@ class Order extends Entity
         $this->_transport->send($this->_message);
     }
 
-    private function _prepareHtml()
-    {
-        $items =[];
-        $products = explode('|',$this->_data['items']);
-        foreach($products as $product)
-        {
-            $items[] = explode(',',$product);
-        }
-
-        $table_header = "
-        <table border>
-                <tr>
-                    <td>Name</td><td>Sku</td><td>Quantity</td><td>Price</td><td>Summary</td>
-                </tr>
-        ";
-
-        $table_footer = "
-             </table>
-        ";
-
-        foreach ($items as $item)
-        {
-            $table_parts[] = "
-                <tr>
-                    <td>$item[0]</td><td>$item[1]</td><td>$item[2]</td><td>$item[3]</td><td>$item[4]</td>
-                </tr>
-            ";
-        }
-
-        array_unshift($table_parts,$table_header);
-        array_push($table_parts,$table_footer);
-        $table = implode($table_parts);
-        return $table;
-    }
-
     private function _prepareMessage()
     {
         $customer = clone $this->_prototype;
@@ -126,30 +91,32 @@ class Order extends Entity
         if ($name = $customer->getName()) {
             $customer_data = $name;
         } else $customer_data = $this->_data['customer_id'];
+
         $num_order = rand(10000, 99999);
-        $text = new MimePart("
-            You have new order: {$num_order}\n
-            Date: {$this->_data['created_at']}\n
-            Customer: {$customer_data}\n
-            Address: {$this->_data['address']}\n
-            Shipping method: {$this->_data['shipping_method']}\n
-            Payment method: {$this->_data['payment_method']}\n
-            Products:\n
-        ");
-        $text->type = "text/plain";
 
-        $totals_text = new MimePart("
-            Totals:
-            Subtotal: {$this->_data['subtotal']} Shipping: {$this->_data['shipping']}\n
-            Grand Total: {$this->_data['grand_total']}\n
-        ");
-        $totals_text->type = "text/plain";
+        $items =[];
+        $products = explode('|',$this->_data['items']);
+        foreach($products as $product)
+        {
+            $items[] = explode(',',$product);
+        }
 
-        $html = new MimePart($this->_prepareHtml());
+        $this->_template->setParams([
+            'customer'=>$customer_data,
+            'num_order'=>$num_order,
+            'data'=>$this->_data,
+            'items'=>$items
+        ]);
+
+        ob_start();
+        $this->_template->render();
+        $body = ob_get_clean();
+
+        $html = new MimePart($body);
         $html->type = "text/html";
 
-        $body = new MimeMessage();
-        $body->setParts([$text, $html, $totals_text]);
-        return $body;
+        $m_body = new MimeMessage();
+        $m_body->setParts([$html]);
+        return $m_body;
     }
 } 

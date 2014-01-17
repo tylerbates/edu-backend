@@ -1,0 +1,30 @@
+You have new order: <?php echo $this->get('num_order'); ?><br>
+Date: <?php echo $this->get('data')['created_at']; ?><br>
+Customer: <?php echo $this->get('customer'); ?><br>
+Address: <?php echo $this->get('data')['address']; ?><br>
+Shipping method: <?php echo $this->get('data')['shipping_method']; ?><br>
+Payment method: <?php echo $this->get('data')['payment_method']; ?><br>
+Products:<br>
+
+<table border>
+    <tr>
+        <td>Name</td>
+        <td>Sku</td>
+        <td>Quantity</td>
+        <td>Price</td>
+        <td>Summary</td>
+    </tr>
+    <?php foreach($this->get('items') as $item): ?>
+        <tr>
+            <td><?php echo $item[0]; ?></td>
+            <td><?php echo $item[1]; ?></td>
+            <td><?php echo $item[2]; ?></td>
+            <td><?php echo $item[3]; ?></td>
+            <td><?php echo $item[4]; ?></td>
+        </tr>
+    <?php endforeach; ?>
+</table>
+
+Totals:<br>
+Subtotal: <?php echo $this->get('data')['subtotal']; ?> Shipping: <?php echo $this->get('data')['shipping']; ?><br>
+Grand Total: <?php echo $this->get('data')['grand_total']; ?><br>

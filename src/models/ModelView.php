@@ -40,6 +40,11 @@ class ModelView implements ISessionUser
         return $this->_params[$param];
     }
 
+    public function setParams($params)
+    {
+        $this->_params = $params;
+    }
+
     public function setSession(Session $session)
     {
         $this->_session = $session;

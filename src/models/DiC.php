@@ -103,13 +103,32 @@ class DiC
         $this->_im->addAlias('SmtpTransport','Zend\Mail\Transport\Smtp');
     }
 
+    private function _assembleView()
+    {
+        $this->_im->setParameters('App\Model\ModelView', [
+            'layoutDir'   => __DIR__ . '/../views/layout/',
+            'templateDir' => __DIR__ . '/../views/',
+            'layout'      => 'base',
+            'params'      => [],
+        ]);
+        $this->_im->addAlias('View', 'App\Model\ModelView');
+    }
+
     private function _assembleOrder()
     {
+        $message = $this->_di->get('Zend\Mail\Message');
+        $message->addFrom('yourproductcatalog@gmail.com', 'your product catalog');
+        $message->addTo('tylerbates098@gmail.com','dear admin');
+        $message->setSubject('new order');
         $this->_im->setParameters('App\Model\Order', [
             'table'=>'App\Model\Resource\Table\Order',
             'transport'=>$this->_di->get('SmtpTransport'),
             'prototype'=>$this->_di->get('Customer',['data'=>[]]),
-            'message'=>'Zend\Mail\Message'
+            'message'=>$message,
+            'template'=>$this->_di->get('View',[
+                    'layout'=>'message_base',
+                    'template'=>'message'
+                ])
         ]);
         $this->_im->addAlias('Order','App\Model\Order');
     }
@@ -183,17 +202,6 @@ class DiC
             'collectorsFactory'=>$this->_di->get('App\Model\Quote\CollectorsFactory')
         ]);
         $this->_im->addAlias('Quote', 'App\Model\Quote');
-    }
-
-    private function _assembleView()
-    {
-        $this->_im->setParameters('App\Model\ModelView', [
-            'layoutDir'   => __DIR__ . '/../views/layout/',
-            'templateDir' => __DIR__ . '/../views/',
-            'layout'      => 'base',
-            'params'      => [],
-        ]);
-        $this->_im->addAlias('View', 'App\Model\ModelView');
     }
 
     private function _assembleSession()
