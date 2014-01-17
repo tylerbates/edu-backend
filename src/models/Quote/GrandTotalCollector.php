@@ -17,6 +17,6 @@ class GrandTotalCollector implements ICollector
 
     public function collect(Quote $quote)
     {
-        return $this->_subtotal->collect($quote) + $this->_shipping->collect($quote);
+        return $quote->getShipping() + $quote->getSubtotal();
     }
 } 

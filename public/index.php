@@ -12,8 +12,6 @@ $di = new \Zend\Di\Di();
 (new \App\Model\DiC($di))->assemble();
 try
 {
-    $session = new Session();
-
     $defaultPath = 'product_list';
     $routePath = isset($_GET['page']) ? $_GET['page'] : $defaultPath ;
     $router = new Model\Router($routePath);
@@ -39,5 +37,4 @@ if($view = $controller->$actionName())
 {
     $view->render();
 }
-var_dump($_SESSION);
 

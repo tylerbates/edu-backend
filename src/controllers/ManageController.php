@@ -151,13 +151,10 @@ class ManageController extends Controller
         $handler = fopen($upload_file,"r");
         while(!feof($handler))
         {
-            $data = fgets($handler);
-            if(!(count(explode(';',$data)) < 2))
-            {
-                $newrecord['city'] = explode(';',$data)[0];
-                $newrecord['price'] = (float) substr(explode(';',$data)[1],0,strlen(explode(';',$data)[1])-2);
-                $records[] = $newrecord;
-            }
+            $data = fgetcsv($handler,null,';');
+            $newrecord['city'] = $data[0];
+            $newrecord['price'] = (float) $data[1];
+            $records[] = $newrecord;
         }
         fclose($handler);
         unlink($upload_file);

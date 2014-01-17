@@ -10,12 +10,12 @@ class SalesController extends Controller
         if($session->isAuthorized())
         {
             $quote->loadByCustomer($session);
-            $quote->setItems();
+            $quote->initItems();
             return $quote;
         } else
         {
             $quote->loadBySession($session);
-            $quote->setItems();
+            $quote->initItems();
             return $quote;
         }
     }

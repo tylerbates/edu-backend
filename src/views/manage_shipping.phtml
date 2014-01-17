@@ -30,15 +30,15 @@ if(isset($_POST['sh_id'])) $id = $_POST['sh_id'];
             <td>City
                 <!-- THIS FORM TAG DISAPPEARS MAGICALLY!!! -->
                 <form method="post" id="first" action="/?page=manage_shipping" class="inline">
-                    <!--<input type="hidden" name="sort[sort_field]" value="city">
-                    <input type="hidden" name="sort[sort_direction]" value="asc">-->
-                    <input type="submit" value="&DownArrow;" class="link-like">
+                    <!--<input type="hidden" name="sort[sort_field]" value="city"/>
+                    <input type="hidden" name="sort[sort_direction]" value="asc"/>-->
+                    <input type="submit" value="&DownArrow;" class="link-like"/>
                 </form>
                 <!-- THIS FORM TAG DISAPPEARS MAGICALLY!!! -->
-                <form method="post" action="/?page=manage_shipping" class="inline">
-                    <input type="hidden" name="sort[sort_field]" value="city">
-                    <input type="hidden" name="sort[sort_direction]" value="desc">
-                    <input type="submit" value="&uparrow;" class="link-like">
+                <form method="post" action="/?page=manage_shipping" class="inline"/>
+                    <input type="hidden" name="sort[sort_field]" value="city"/>
+                    <input type="hidden" name="sort[sort_direction]" value="desc"/>
+                    <input type="submit" value="&uparrow;" class="link-like"/>
                 </form>
             </td>
             <td>Price
@@ -53,7 +53,7 @@ if(isset($_POST['sh_id'])) $id = $_POST['sh_id'];
                     <input type="submit" value="&uparrow;" class="link-like">
                 </form>
             </td>
-            <td>
+            <td></td>
         </tr>
         <?php foreach($this->get('collection') as $item): ?>
             <tr>

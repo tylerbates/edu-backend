@@ -52,7 +52,7 @@ class Quote extends Entity
         }
     }
 
-    public function setItems()
+    public function initItems()
     {
         $this->_items->filterByQuote($this);
     }
