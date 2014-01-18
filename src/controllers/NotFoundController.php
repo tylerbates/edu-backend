@@ -1,11 +1,10 @@
 <?php
 namespace App\Controller;
 
-class NotFoundController
+class NotFoundController extends Controller
 {
     public function notFoundAction()
     {
-        $view = 'not_found';
-        require_once __DIR__ . '/../views/layout/base.phtml';
+        return $this->_di->get('View',['template'=>'not_found']);
     }
 }
