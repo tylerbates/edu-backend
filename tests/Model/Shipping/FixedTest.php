@@ -8,7 +8,7 @@ class FixedTest extends \PHPUnit_Framework_TestCase
     public function testReturnsPrice()
     {
         $fixed = new Fixed();
-        $this->assertEquals(42,$fixed->getPrice());
+        $this->assertEquals(100,$fixed->getPrice());
     }
 
     public function testReturnsCode()

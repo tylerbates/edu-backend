@@ -12,7 +12,7 @@ class CustomerTest extends \PHPUnit_Framework_TestCase
         $resource->expects($this->any())
                  ->method('save')
                  ->with($this->equalTo(['name' => 'Vasia']));
-        $customer = new Customer(['name' => 'Vasia']);
+        $customer = new Customer(['name' => 'Vasia'],$resource);
 
         $customer->save($resource);
     }
@@ -34,8 +34,11 @@ class CustomerTest extends \PHPUnit_Framework_TestCase
             ->method('save')
             ->with($this->equalTo(['name' => 'Vasia']))
             ->will($this->returnValue(24));
+        $resource->expects($this->any())
+            ->method('getPrimaryKeyField')
+            ->will($this->returnValue('customer_id'));
 
-        $customer = new Customer(['name' => 'Vasia']);
+        $customer = new Customer(['name' => 'Vasia'],$resource);
         $customer->save($resource);
 
         $this->assertEquals(24,$customer->getId());

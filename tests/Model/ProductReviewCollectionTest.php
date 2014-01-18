@@ -1,6 +1,7 @@
 <?php
 namespace Test\Model;
 
+use App\Model\ProductReview;
 use App\Model\ProductReviewCollection;
 use App\Model\Product;
 
@@ -16,8 +17,8 @@ class ProductReviewCollectionTest extends \PHPUnit_Framework_TestCase
                     ['name' => 'Vasia']
                 ]
             ));
-
-        $collection = new ProductReviewCollection($resource);
+        $prototype = new ProductReview([]);
+        $collection = new ProductReviewCollection($resource,$prototype);
 
         $reviews = $collection->getProductReviews();
         $this->assertEquals('Vasia', $reviews[0]->getName());
@@ -35,7 +36,8 @@ class ProductReviewCollectionTest extends \PHPUnit_Framework_TestCase
                 ]
             ));
 
-        $collection = new ProductReviewCollection($resource);
+        $prototype = new ProductReview([]);
+        $collection = new ProductReviewCollection($resource,$prototype);
         $reviews = $collection->getProductReviews();
         $expected = array(0 => 'Vasia', 1 => 'Petia');
         $iterated = false;
@@ -59,8 +61,8 @@ class ProductReviewCollectionTest extends \PHPUnit_Framework_TestCase
         $resource->expects($this->any())
             ->method('filterBy')
             ->with($this->equalTo('product_id'), $this->equalTo($productId));
-
-        $collection = new ProductReviewCollection($resource);
+        $prototype = new ProductReview([]);
+        $collection = new ProductReviewCollection($resource,$prototype);
 
         $collection->filterByProduct($product);
     }
@@ -76,8 +78,8 @@ class ProductReviewCollectionTest extends \PHPUnit_Framework_TestCase
         $resource->expects($this->any())
             ->method('average')
             ->with($this->equalTo('rating'));
-
-        $collection = new ProductReviewCollection($resource);
+        $prototype = new ProductReview([]);
+        $collection = new ProductReviewCollection($resource,$prototype);
         $collection->getAverageRating();
     }
 }
